@@ -13,7 +13,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: 'Rajdhani', sans-serif; display: flex; min-height: 100vh; }
 
-    /* Login Screen */
     #login-screen {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center;
@@ -28,7 +27,6 @@
       border-radius: 6px; color: #fff; margin-bottom: 15px; font-family: inherit;
     }
 
-    /* Dashboard Layout */
     .sidebar { width: 260px; background: var(--card); border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; }
     .sidebar h2 { font-family: 'Orbitron', sans-serif; color: var(--red); font-size: 1.2rem; margin-bottom: 30px; }
     .nav-item { color: var(--muted); text-decoration: none; padding: 12px; border-radius: 6px; font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
@@ -46,11 +44,6 @@
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1a1c26; }
-
-    /* Modal */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 500; align-items: center; justify-content: center; }
-    .modal.active { display: flex; }
-    .modal-box { background: var(--card); border: 1px solid var(--red); border-radius: 10px; padding: 25px; width: 100%; max-width: 500px; }
   </style>
 </head>
 <body>
@@ -69,13 +62,9 @@
   <aside class="sidebar">
     <h2>KGFF ADMIN</h2>
     <div class="nav-item active" onclick="switchPage('dashboard')">📊 Dashboard</div>
-    <!-- UPDATE THIS LINK TO YOUR DEPLOYED USER SITE REPOSITORY URL -->
     <a href="https://fmd147726-crypto.github.io/kg-ff-panel/" target="_blank" class="nav-item">🌐 Visit User Site</a>
     <a href="https://imgbb.com/" target="_blank" class="nav-item">🖼️ ImgBB Host</a>
     <a href="https://postimages.org/" target="_blank" class="nav-item">🖼️ PostImages Host</a>
-    <div class="nav-item" onclick="switchPage('pc-panels')">💻 Manage PC Panels</div>
-    <div class="nav-item" onclick="switchPage('mobile-panels')">📱 Manage Mobile Panels</div>
-    <div class="nav-item" onclick="switchPage('sync-settings')">☁️ Cloud Database Sync</div>
     <div class="nav-item" style="margin-top: auto; color: #ff4444;" onclick="doLogout()">🚪 Logout</div>
   </aside>
 
@@ -104,47 +93,14 @@
 
       <div class="card-panel">
         <h3>HOMEPAGE CATEGORY VISIBILITY</h3>
-        <div id="category-visibility-list">
-          <!-- Rendered via JS -->
-        </div>
-      </div>
-    </div>
-
-    <!-- PAGE: CLOUD SYNC SETTINGS -->
-    <div id="page-sync-settings" style="display:none;">
-      <div class="card-panel">
-        <h3>2-REPOSITORY CLOUD SYNC CONFIG</h3>
-        <p style="color:var(--muted); font-size:0.9rem; margin-bottom:15px;">
-          To connect this <strong>kg-ff-admin</strong> repo with your <strong>kg-ff-panel</strong> repo across different URLs, paste your Firebase Realtime Database URL below (e.g. <code>https://your-app-default-rtdb.firebaseio.com</code>).
-        </p>
-        <input type="text" id="firebase-url-input" class="input-field" placeholder="https://your-project-default-rtdb.firebaseio.com">
-        <button class="btn" onclick="saveCloudSync()">SAVE CLOUD CONFIG</button>
-      </div>
-    </div>
-
-    <!-- PAGE: PANELS MANAGEMENT -->
-    <div id="page-pc-panels" style="display:none;">
-      <div class="card-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-          <h3>PC PAID PANELS LIST</h3>
-          <button class="btn" onclick="openItemModal('pc')">+ ADD NEW PC ITEM</button>
-        </div>
-        <div id="pc-items-list"></div>
-      </div>
-    </div>
-
-    <div id="page-mobile-panels" style="display:none;">
-      <div class="card-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-          <h3>MOBILE PAID PANELS LIST</h3>
-          <button class="btn" onclick="openItemModal('mobile')">+ ADD NEW MOBILE ITEM</button>
-        </div>
-        <div id="mobile-items-list"></div>
+        <div id="category-visibility-list"></div>
       </div>
     </div>
   </main>
 
   <script>
+    const FIREBASE_URL = "https://kg-ff-panel-default-rtdb.firebaseio.com";
+
     document.addEventListener('DOMContentLoaded', () => {
       checkAuth();
       loadDashboardData();
@@ -174,37 +130,24 @@
       location.reload();
     }
 
-    function switchPage(page) {
-      document.querySelectorAll('.main-content > div').forEach(div => div.style.display = 'none');
-      document.getElementById(`page-${page}`).style.display = 'block';
-      document.getElementById('page-title').innerText = page.toUpperCase().replace('-', ' ');
-    }
-
     function loadDashboardData() {
       document.getElementById('global-discord-input').value = localStorage.getItem('kgff_discord_link') || "https://discord.gg/NZsbZq4C7";
       document.getElementById('global-topup-input').value = localStorage.getItem('kgff_topup_link') || "https://codashop.com/";
-      document.getElementById('firebase-url-input').value = localStorage.getItem('kgff_firebase_url') || "";
       renderCategories();
     }
 
     function saveDiscordLink() {
       const val = document.getElementById('global-discord-input').value;
       localStorage.setItem('kgff_discord_link', val);
-      syncToCloud({ discord: val });
-      alert('Discord link saved successfully!');
+      syncToFirebase({ discord: val });
+      alert('Discord link saved & updated in Firebase!');
     }
 
     function saveTopupLink() {
       const val = document.getElementById('global-topup-input').value;
       localStorage.setItem('kgff_topup_link', val);
-      syncToCloud({ topup: val });
-      alert('Top-Up link saved successfully!');
-    }
-
-    function saveCloudSync() {
-      const val = document.getElementById('firebase-url-input').value.trim();
-      localStorage.setItem('kgff_firebase_url', val);
-      alert('Cloud DB Config saved!');
+      syncToFirebase({ topup: val });
+      alert('Top-Up link saved & updated in Firebase!');
     }
 
     function renderCategories() {
@@ -237,18 +180,18 @@
       const categories = JSON.parse(localStorage.getItem('kgff_category_meta'));
       categories[index].visible = !categories[index].visible;
       localStorage.setItem('kgff_category_meta', JSON.stringify(categories));
-      syncToCloud({ categories });
+      syncToFirebase({ categories });
       renderCategories();
     }
 
-    function syncToCloud(payload) {
-      const cloudUrl = localStorage.getItem('kgff_firebase_url');
-      if (cloudUrl) {
-        fetch(`${cloudUrl.replace(/\/$/, '')}/settings.json`, {
-          method: 'PATCH',
-          body: JSON.stringify(payload)
-        }).catch(e => console.error("Cloud push failed", e));
-      }
+    function syncToFirebase(payload) {
+      fetch(`${FIREBASE_URL}/settings.json`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(() => console.log('Successfully updated Firebase!'))
+      .catch(err => console.error('Firebase error:', err));
     }
   </script>
 </body>
