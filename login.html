@@ -1,262 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>KG FF PANEL | Admin Login</title>
-        <style>
-            * {
-                box-sizing: border-box
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KG FF PANEL | Admin Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #05020a;
+            --card-bg: #0b0512;
+            --card-border: #1a0b2e;
+            --neon-pink: #ff0066;
+            --neon-green: #00cc66;
+            --text-light: #e2d9f3;
+            --text-dim: #a291b5;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 35px 25px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 15px rgba(255,0,102,0.15);
+            text-align: center;
+        }
+        .login-card h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,0,102,0.5);
+        }
+        .login-card p {
+            color: var(--text-dim);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .btn-google {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ffffff33;
+            background: #ffffff;
+            color: #000;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        .btn-google:hover {
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
+            transform: translateY(-2px);
+        }
+        .divider {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            color: var(--text-dim);
+            font-size: 12px;
+        }
+        .divider::before, .divider::after {
+            content: ""; flex: 1; height: 1px; background: var(--card-border);
+        }
+        .divider span { padding: 0 10px; }
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: #05020a;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            border-color: var(--neon-pink);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--neon-pink), #990033);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 0 15px rgba(255,0,102,0.4);
+            transition: all 0.3s ease;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(255,0,102,0.7);
+        }
+        .alert-box {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: none;
+        }
+        .alert-error {
+            background: rgba(255, 0, 102, 0.15);
+            border: 1px solid var(--neon-pink);
+            color: #ff3385;
+        }
+        .alert-success {
+            background: rgba(0, 204, 102, 0.15);
+            border: 1px solid var(--neon-green);
+            color: #33ff99;
+        }
+    </style>
 
-            body {
-                margin: 0;
-                min-height: 100vh;
-                display: grid;
-                place-items: center;
-                padding: 20px;
-                background: radial-gradient(circle at top,#252044,#090912 60%);
-                font-family: Arial,sans-serif;
-                color: #f8fafc
-            }
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+</head>
+<body>
 
-            .card {
-                width: min(420px,100%);
-                padding: 32px;
-                border: 1px solid #37304f;
-                border-radius: 20px;
-                background: rgba(20,17,34,.94);
-                box-shadow: 0 20px 70px #0008
-            }
+    <div class="login-card">
+        <h2>KG FF PANEL Admin</h2>
+        <p>Sign in with an authorized admin account.</p>
 
-            h1 {
-                margin: 0 0 8px;
-                font-size: 25px
-            }
+        <button class="btn-google" id="googleBtn">
+            <i class="fab fa-google"></i> Continue with Google
+        </button>
 
-            p {
-                color: #aaa4bd;
-                font-size: 14px;
-                line-height: 1.5
-            }
+        <div class="divider"><span>OR SIGN IN WITH EMAIL</span></div>
 
-            .field {
-                margin: 18px 0
-            }
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Admin Gmail</label>
+                <input type="email" id="emailInput" placeholder="admin@gmail.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="passwordInput" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-submit" id="submitBtn">SIGN IN</button>
+        </form>
 
-            label {
-                display: block;
-                margin-bottom: 8px;
-                font-size: 13px;
-                color: #d8d3e7
-            }
+        <div id="alertBox" class="alert-box"></div>
+    </div>
 
-            input {
-                width: 100%;
-                padding: 13px 14px;
-                border: 1px solid #443b5e;
-                border-radius: 10px;
-                background: #100d1c;
-                color: white;
-                outline: none
-            }
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDOFL6dKvw_RfyKMe3QQgvE4lt7Gtc4yaM",
+            authDomain: "kg-ff-panel.firebaseapp.com",
+            databaseURL: "https://kg-ff-panel-default-rtdb.firebaseio.com",
+            projectId: "kg-ff-panel",
+            storageBucket: "kg-ff-panel.appspot.com",
+            messagingSenderId: "295013484465",
+            appId: "1:295013484465:web:b6bc2a949e239095761f90"
+        };
 
-            input:focus {
-                border-color: #a78bfa
-            }
-
-            button {
-                width: 100%;
-                padding: 13px;
-                border: 0;
-                border-radius: 10px;
-                background: linear-gradient(90deg,#7c3aed,#2563eb);
-                color: white;
-                font-weight: bold;
-                cursor: pointer
-            }
-
-            button:disabled {
-                opacity: .6;
-                cursor: wait
-            }
-
-            .google-btn {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 12px;
-                margin: 18px 0 12px;
-                background: #fff;
-                color: #202124;
-                border: 1px solid #dadce0;
-                font-size: 14px
-            }
-
-            .google-btn:hover {
-                background: #f8faff
-            }
-
-            .google-icon {
-                width: 20px;
-                height: 20px
-            }
-
-            .divider {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                color: #77718b;
-                font-size: 12px;
-                margin: 18px 0
-            }
-
-            .divider:before,.divider:after {
-                content: '';
-                height: 1px;
-                flex: 1;
-                background: #39334b
-            }
-
-            #message {
-                min-height: 20px;
-                color: #fca5a5;
-                font-size: 13px;
-                margin-top: 14px;
-                line-height: 1.4;
-                word-break: break-word;
-            }
-
-            .note {
-                font-size: 12px;
-                text-align: center;
-                margin-top: 20px
-            }
-        </style>
-    </head>
-    <body>
-        <main class="card">
-            <h1>KG FF PANEL Admin Login</h1>
-            <p>Sign in with the email account approved by the KG FF PANEL administrator.</p>
-            <button id="googleBtn" class="google-btn" type="button">
-                <svg class="google-icon" viewBox="0 0 48 48" aria-hidden="true">
-                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.74 7.18l7.62 5.91c4.45-4.1 7.16-10.15 7.16-17.56z"/>
-                    <path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.53 2.56 10.78l7.97-6.19z"/>
-                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.89l-7.62-5.91c-2.12 1.42-4.84 2.26-8.28 2.26-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-                </svg>
-                Continue with Google
-            </button>
-            <div class="divider">OR SIGN IN WITH EMAIL</div>
-            <form id="loginForm">
-                <div class="field">
-                    <label for="email">Admin Gmail</label>
-                    <input id="email" type="email" autocomplete="username" required placeholder="admin@gmail.com">
-                </div>
-                <div class="field">
-                    <label for="password">Password</label>
-                    <input id="password" type="password" autocomplete="current-password" required placeholder="Your password">
-                </div>
-                <button id="loginBtn" type="submit">SIGN IN</button>
-                <div id="message" role="status"></div>
-            </form>
-            <p class="note">Only accounts listed in Manage Admins can access the panel.</p>
-        </main>
-        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-        <script>
-            // FIREBASE CONFIG FOR "KG FF PANEL"
-            const firebaseConfig = {
-                apiKey: "AIzaSyDOFL6dKvw_RfyKMe3QQgvE4lt7Gtc4yaM",
-                authDomain: "kg-ff-panel.firebaseapp.com",
-                databaseURL: "https://kg-ff-panel-default-rtdb.firebaseio.com",
-                projectId: "kg-ff-panel",
-                storageBucket: "kg-ff-panel.appspot.com",
-                messagingSenderId: "295013484465",
-                appId: "1:295013484465:web:b6bc2a949e239095761f90"
-            };
+        if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
-            const auth = firebase.auth()
-              , db = firebase.database();
-            const form = document.getElementById('loginForm')
-              , btn = document.getElementById('loginBtn')
-              , googleBtn = document.getElementById('googleBtn')
-              , message = document.getElementById('message');
-            const googleProvider = new firebase.auth.GoogleAuthProvider();
-            googleProvider.setCustomParameters({
-                prompt: 'select_account'
-            });
-            function keyFor(email) {
-                return email.trim().toLowerCase().replace(/\./g, ',')
+        }
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        function showAlert(msg, type = 'error') {
+            const box = document.getElementById('alertBox');
+            box.innerText = msg;
+            box.className = 'alert-box ' + (type === 'error' ? 'alert-error' : 'alert-success');
+            box.style.display = 'block';
+        }
+
+        async function verifyAdminAndRedirect(user) {
+            const sanitizedEmail = user.email.replace(/\./g, ',');
+            
+            // Check super admin and normal admin nodes
+            const superSnap = await database.ref('admins/super/' + sanitizedEmail).once('value');
+            const normalSnap = await database.ref('admins/normal/' + sanitizedEmail).once('value');
+
+            if (superSnap.exists() || normalSnap.exists()) {
+                showAlert('Login Successful! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            } else {
+                await auth.signOut();
+                showAlert('Access Denied: Your email (' + user.email + ') is not an authorized admin.');
             }
-            async function verifyAdminAndContinue(user) {
-                const email = (user.email || '').trim().toLowerCase();
-                if (!email) {
-                    await auth.signOut();
-                    throw new Error('Google account did not provide an email address.')
-                }
-                const key = keyFor(email);
-                const [superSnap,normalSnap] = await Promise.all([db.ref('admins/super/' + key).once('value'), db.ref('admins/normal/' + key).once('value')]);
-                if (!superSnap.exists() && !normalSnap.exists()) {
-                    await auth.signOut();
-                    throw new Error('Access denied: this Gmail is not listed in Manage Admins.')
-                }
-                window.location.replace('index.html')
+        }
+
+        // Email / Password Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passwordInput').value;
+
+            try {
+                const res = await auth.signInWithEmailAndPassword(email, password);
+                await verifyAdminAndRedirect(res.user);
+            } catch (err) {
+                showAlert(err.message);
             }
-            googleBtn.addEventListener('click', async () => {
-                message.textContent = '';
-                googleBtn.disabled = true;
-                googleBtn.textContent = 'Opening Google…';
-                try {
-                    const result = await auth.signInWithPopup(googleProvider);
-                    await verifyAdminAndContinue(result.user)
-                } catch (err) {
-                    if (err.code === 'auth/popup-closed-by-user') {
-                        message.textContent = 'Google sign-in was cancelled.'
-                    } else if (err.code === 'auth/unauthorized-domain') {
-                        message.textContent = 'Domain not authorized in Firebase project KG FF Panel. Please add fmd147726-crypto.github.io under Authentication -> Settings.'
-                    } else {
-                        message.textContent = err.message || 'Google sign-in failed. Please try again.'
-                    }
-                } finally {
-                    googleBtn.disabled = false;
-                    googleBtn.innerHTML = '<svg class="google-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.74 7.18l7.62 5.91c4.45-4.1 7.16-10.15 7.16-17.56z"/><path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.53 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.89l-7.62-5.91c-2.12 1.42-4.84 2.26-8.28 2.26-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Continue with Google'
-                }
+        });
+
+        // Google Sign-In
+        document.getElementById('googleBtn').addEventListener('click', async () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                const res = await auth.signInWithPopup(provider);
+                await verifyAdminAndRedirect(res.user);
+            } catch (err) {
+                showAlert(err.message);
             }
-            );
-            form.addEventListener('submit', async e => {
-                e.preventDefault();
-                message.textContent = '';
-                btn.disabled = true;
-                btn.textContent = 'CHECKING…';
-                let signedInUser = null;
-                try {
-                    const email = document.getElementById('email').value.trim().toLowerCase()
-                      , password = document.getElementById('password').value;
-                    const result = await auth.signInWithEmailAndPassword(email, password);
-                    signedInUser = result.user;
-                    const key = keyFor(email);
-                    const [superSnap,normalSnap] = await Promise.all([db.ref('admins/super/' + key).once('value'), db.ref('admins/normal/' + key).once('value')]);
-                    if (!superSnap.exists() && !normalSnap.exists()) {
-                        await auth.signOut();
-                        message.textContent = 'Access denied: this email is not an approved admin.';
-                        return
-                    }
-                    window.location.replace('index.html')
-                } catch (err) {
-                    if (signedInUser) {
-                        try {
-                            await auth.signOut()
-                        } catch (_) {}
-                    }
-                    message.textContent = err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found' ? 'Incorrect email or password.' : (err.message || 'Login failed. Please try again.')
-                } finally {
-                    btn.disabled = false;
-                    btn.textContent = 'SIGN IN'
-                }
+        });
+
+        // Auto redirect if already logged in
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                await verifyAdminAndRedirect(user);
             }
-            );
-        </script>
-    </body>
+        });
+    </script>
+</body>
 </html>
