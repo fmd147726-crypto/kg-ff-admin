@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>KGFF PANEL | Admin Login</title>
+        <title>KG FF PANEL | Admin Login</title>
         <style>
             * {
                 box-sizing: border-box
@@ -136,8 +136,8 @@
     </head>
     <body>
         <main class="card">
-            <h1>Admin Login</h1>
-            <p>Sign in with the email account approved by the KGFF PANEL administrator.</p>
+            <h1>KG FF PANEL Admin Login</h1>
+            <p>Sign in with the email account approved by the KG FF PANEL administrator.</p>
             <button id="googleBtn" class="google-btn" type="button">
                 <svg class="google-icon" viewBox="0 0 48 48" aria-hidden="true">
                     <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -166,12 +166,13 @@
         <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
         <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
         <script>
+            // FIREBASE CONFIG FOR "KG FF PANEL"
             const firebaseConfig = {
                 apiKey: "AIzaSyDOFL6dKvw_RfyKMe3QQgvE4lt7Gtc4yaM",
-                authDomain: "bangla-ff-admin.firebaseapp.com",
-                databaseURL: "https://bangla-ff-admin-default-rtdb.asia-southeast1.firebasedatabase.app",
-                projectId: "bangla-ff-admin",
-                storageBucket: "bangla-ff-admin.firebasestorage.app",
+                authDomain: "kg-ff-panel.firebaseapp.com",
+                databaseURL: "https://kg-ff-panel-default-rtdb.firebaseio.com",
+                projectId: "kg-ff-panel",
+                storageBucket: "kg-ff-panel.appspot.com",
                 messagingSenderId: "295013484465",
                 appId: "1:295013484465:web:b6bc2a949e239095761f90"
             };
@@ -214,7 +215,7 @@
                     if (err.code === 'auth/popup-closed-by-user') {
                         message.textContent = 'Google sign-in was cancelled.'
                     } else if (err.code === 'auth/unauthorized-domain') {
-                        message.textContent = 'Domain not authorized! Please add fmd147726-crypto.github.io to Authorized Domains in Firebase project "bangla-ff-admin".'
+                        message.textContent = 'Domain not authorized in Firebase project KG FF Panel. Please add fmd147726-crypto.github.io under Authentication -> Settings.'
                     } else {
                         message.textContent = err.message || 'Google sign-in failed. Please try again.'
                     }
