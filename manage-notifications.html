@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Notifications - BANGLA FF</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; cursor: default; }
+        body { background-color: #05020a; color: #fff; padding: 30px; min-height: 100vh; }
+        
+        #mouse-glow {
+            position: fixed; width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(255, 0, 102, 0.4); filter: blur(20px);
+            pointer-events: none; transform: translate(-50%, -50%); z-index: 9999;
+        }
+
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px; border-bottom: 1px solid #2a113d; padding-bottom: 15px;
+        }
+        .header h1 { font-size: 26px; }
+        .header h1 span { color: #ff0066; }
+        .back-btn {
+            background: #11071a; color: #fff; text-decoration: none; padding: 10px 20px;
+            border: 1px solid #2a113d; border-radius: 8px; font-weight: 600; transition: 0.3s;
+        }
+        .back-btn:hover { border-color: #ff0066; color: #ff0066; }
+
+        .form-card {
+            background: #11071a; border: 1px solid #2a113d; border-radius: 16px;
+            padding: 30px; max-width: 520px; margin: 0 auto 40px;
+        }
+        .input-group { margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px; }
+        .input-group label {
+            font-size: 13px; color: #aaa; font-weight: 600; letter-spacing: 1px;
+            text-transform: uppercase; display: flex; align-items: center; gap: 8px;
+        }
+        .input-group label i { color: #ff0066; }
+        .input-group input, .input-group textarea {
+            background: #05020a; border: 1px solid #2a113d; color: #fff;
+            padding: 14px 16px; border-radius: 10px; outline: none; font-size: 15px;
+            cursor: text; transition: 0.3s; resize: vertical;
+        }
+        .input-group input:focus, .input-group textarea:focus { border-color: #9d00ff; }
+        .input-group textarea { min-height: 100px; }
+
+        .push-btn {
+            width: 100%; border: none; padding: 14px; border-radius: 12px;
+            font-size: 16px; font-weight: 700; color: #fff; cursor: pointer;
+            background: linear-gradient(90deg, #9d00ff, #ff0066);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: 0.3s; letter-spacing: 0.5px;
+        }
+        .push-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,0,102,0.35); }
+        .push-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .info-note {
+            text-align: center; color: #666; font-size: 13px; margin-top: 14px;
+        }
+        .info-note i { color: #00cc66; }
+
+        .list-title {
+            font-size: 20px; margin-bottom: 20px; max-width: 700px; margin-left: auto; margin-right: auto;
+        }
+        .list-title span { color: #ff0066; }
+
+        .notif-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+        .notif-item {
+            background: #11071a; border: 1px solid #2a113d; border-radius: 12px;
+            padding: 18px 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 15px;
+        }
+        .notif-item h3 { font-size: 17px; color: #fff; margin-bottom: 6px; }
+        .notif-item p { color: #aaa; font-size: 14px; line-height: 1.4; margin-bottom: 8px; }
+        .notif-item .time { color: #666; font-size: 12px; }
+        .btn-del {
+            background: transparent; border: 1px solid #ff0033; color: #ff0033;
+            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px;
+            font-weight: 600; flex-shrink: 0; transition: 0.3s;
+        }
+        .btn-del:hover { background: #ff0033; color: #fff; }
+        #empty { text-align: center; color: #555; padding: 30px; }
+    </style>
+</head>
+<body>
+    <div id="mouse-glow"></div>
+
+    <div class="header">
+        <h1>Push <span>Notifications</span></h1>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Dashboard</a>
+    </div>
+
+    <div class="form-card">
+        <form id="notifForm">
+            <div class="input-group">
+                <label><i class="fas fa-heading"></i> Notice Title</label>
+                <input type="text" id="title" placeholder="NEW UPDATE OB55 RELEASED!" required>
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-comment-alt"></i> Notice Message</label>
+                <textarea id="message" placeholder="Type message for users..." required></textarea>
+            </div>
+            <!-- DATE/TIME field REMOVED — auto live time on push -->
+            <button type="submit" class="push-btn" id="pushBtn">
+                <i class="fas fa-paper-plane"></i> Push Notification
+            </button>
+            <p class="info-note"><i class="fas fa-clock"></i> Time will be set automatically to current time when you push</p>
+        </form>
+    </div>
+
+    <h2 class="list-title">Sent <span>Notifications</span></h2>
+    <div class="notif-list" id="notifList">
+        <div id="empty">No notifications yet</div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDOFL6dKvw_RfyKMe3QQgvE4lt7Gtc4yaM",
+            authDomain: "bangla-ff-admin.firebaseapp.com",
+            databaseURL: "https://bangla-ff-admin-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "bangla-ff-admin",
+            storageBucket: "bangla-ff-admin.firebasestorage.app",
+            messagingSenderId: "295013484465",
+            appId: "1:295013484465:web:b6bc2a949e239095761f90"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        document.addEventListener('mousemove', (e) => {
+            const g = document.getElementById('mouse-glow');
+            g.style.left = e.clientX + 'px';
+            g.style.top = e.clientY + 'px';
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'index.html';
+        });
+
+        // Format live time like: "Today at 10:35 PM" or "26 Mar 2024, 10:35 PM"
+        function getLiveTimeLabel() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const h12 = hours % 12 || 12;
+            const timeStr = `${h12}:${minutes} ${ampm}`;
+
+            const today = new Date();
+            const isToday = now.toDateString() === today.toDateString();
+            if (isToday) return `Today at ${timeStr}`;
+
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            return `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}, ${timeStr}`;
+        }
+
+        // PUSH notification
+        document.getElementById('notifForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('pushBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Pushing...';
+
+            const data = {
+                title: document.getElementById('title').value.trim(),
+                message: document.getElementById('message').value.trim(),
+                time: getLiveTimeLabel(),   // auto live time
+                timestamp: Date.now(),
+                read: false
+            };
+
+            try {
+                await set(push(ref(db, 'notifications')), data);
+                document.getElementById('notifForm').reset();
+                alert('Notification pushed successfully!');
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Push Notification';
+        });
+
+        // Load sent list
+        onValue(ref(db, 'notifications'), (snapshot) => {
+            const list = document.getElementById('notifList');
+            list.innerHTML = '';
+
+            if (!snapshot.exists()) {
+                list.innerHTML = '<div id="empty">No notifications yet</div>';
+                return;
+            }
+
+            // newest first
+            const items = [];
+            snapshot.forEach(child => items.push({ key: child.key, ...child.val() }));
+            items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            items.forEach(item => {
+                list.innerHTML += `
+                    <div class="notif-item">
+                        <div>
+                            <h3>${item.title}</h3>
+                            <p>${item.message}</p>
+                            <div class="time"><i class="far fa-clock"></i> ${item.time || ''}</div>
+                        </div>
+                        <button class="btn-del" onclick="deleteNotif('${item.key}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+            });
+        });
+
+        window.deleteNotif = (key) => {
+            if (confirm('Delete this notification?')) {
+                remove(ref(db, `notifications/${key}`));
+            }
+        };
+    </script>
+</body>
+</html>
