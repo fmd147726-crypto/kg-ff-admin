@@ -1,400 +1,473 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KGFF PANEL - Admin Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --bg: #05020a; --card: #0b0512; --border: #1a0b2e;
-      --pink: #ff0066; --purple: #9d00ff; --green: #00cc66;
-      --text: #fff; --muted: #77688a;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
-    body { background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KG FF PANEL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #05020a;
+            --card-bg: #0b0512;
+            --border-color: #1a0b2e;
+            --neon-pink: #ff0066;
+            --neon-green: #00cc66;
+            --text-light: #ffffff;
+            --text-gray: #777777;
+        }
 
-    /* LOGIN */
-    #login-screen {
-      position: fixed; inset: 0; background: var(--bg); z-index: 9999;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .login-box {
-      background: var(--card); border: 1px solid var(--pink); padding: 35px;
-      border-radius: 14px; width: 360px; text-align: center;
-      box-shadow: 0 0 40px rgba(255,0,102,0.25);
-    }
-    .login-box h2 { font-family: 'Orbitron'; color: var(--pink); margin-bottom: 22px; font-size: 1.3rem; }
-    .input-field {
-      width: 100%; padding: 12px 14px; background: #12081f; border: 1px solid var(--border);
-      border-radius: 8px; color: #fff; margin-bottom: 14px; font-size: 14px;
-    }
-    .input-field:focus { outline: none; border-color: var(--pink); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-light); min-height: 100vh; overflow-x: hidden; position: relative; display: flex; flex-direction: column; }
 
-    /* LAYOUT */
-    .sidebar {
-      width: 260px; background: var(--card); border-right: 1px solid var(--border);
-      padding: 22px 16px; display: flex; flex-direction: column; flex-shrink: 0;
-    }
-    .sidebar h2 { font-family: 'Orbitron'; color: var(--pink); font-size: 1.15rem; margin-bottom: 28px; padding-left: 8px; }
-    .nav-item {
-      color: var(--muted); text-decoration: none; padding: 12px 14px; border-radius: 8px;
-      font-weight: 700; margin-bottom: 4px; cursor: pointer; display: flex; align-items: center; gap: 10px;
-      transition: 0.2s; font-size: 14px;
-    }
-    .nav-item:hover, .nav-item.active { background: #12081f; color: var(--pink); }
-    .nav-item i { width: 18px; text-align: center; }
+        /* Background Glow Effect */
+        .bg-glow {
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 0, 102, 0.05) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
 
-    .main-content { flex: 1; padding: 28px 32px; overflow-y: auto; }
-    .page-title { font-family: 'Orbitron'; font-size: 1.4rem; margin-bottom: 24px; color: #fff; }
+        /* Header / Navbar */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 50px;
+            position: relative;
+            z-index: 100;
+        }
 
-    .card-panel {
-      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-      padding: 22px; margin-bottom: 22px;
-    }
-    .card-panel h3 {
-      font-family: 'Orbitron'; font-size: 0.95rem; color: var(--pink);
-      margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
-    }
+        /* Clickable Logo Section */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-    .btn {
-      background: var(--pink); color: #fff; border: none; padding: 10px 20px;
-      border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px;
-      transition: 0.2s; display: inline-flex; align-items: center; gap: 6px;
-    }
-    .btn:hover { background: #e6005c; transform: translateY(-1px); }
-    .btn-secondary { background: #1a0b2e; border: 1px solid var(--border); }
-    .btn-secondary:hover { border-color: var(--pink); color: var(--pink); }
-    .btn-green { background: var(--green); color: #000; }
-    .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .site-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--neon-pink); 
+        }
 
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } .sidebar { width: 70px; } .nav-item span { display: none; } }
+        .brand-text h2 {
+            font-size: 16px;
+            color: white;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
 
-    .switch-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 0; border-bottom: 1px solid #140924;
-    }
-    .switch-row:last-child { border-bottom: none; }
+        .brand-text p {
+            font-size: 9px;
+            color: var(--text-gray);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
 
-    .status-dot {
-      width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px;
-    }
-    .dot-on { background: var(--green); box-shadow: 0 0 6px var(--green); }
-    .dot-off { background: #555; }
+        .header-btn {
+            background: transparent;
+            border: 1px solid #333;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .header-btn:hover { border-color: white; }
 
-    .toast {
-      position: fixed; bottom: 24px; right: 24px; background: var(--green); color: #000;
-      padding: 12px 22px; border-radius: 8px; font-weight: 700; font-size: 13px;
-      z-index: 9999; opacity: 0; transform: translateY(20px); transition: 0.3s; pointer-events: none;
-    }
-    .toast.show { opacity: 1; transform: translateY(0); }
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+            z-index: 10;
+        }
 
-    .hidden { display: none !important; }
-  </style>
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 204, 102, 0.05);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+        .status-badge i { font-size: 8px; }
+
+        .hero h1 {
+            font-size: 45px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .hero h1 span { color: var(--neon-pink); }
+
+        .hero-subtitle {
+            font-size: 11px;
+            color: var(--text-gray);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 35px;
+        }
+
+        /* Action Buttons */
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid #333;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+        .action-btn:hover { border-color: var(--text-light); }
+
+        .icon-btn {
+            background: rgba(255, 0, 102, 0.05);
+            border: 1px solid rgba(255, 0, 102, 0.2);
+            color: var(--neon-pink);
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .icon-btn:hover { background: var(--neon-pink); color: white; }
+
+        /* Divider */
+        .divider {
+            text-align: center;
+            margin: 50px 0 40px;
+            font-size: 11px;
+            color: #444;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Grid Cards */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            text-decoration: none;
+            position: relative;
+            transition: 0.3s;
+            display: none;
+        }
+        .card.visible { display: block; }
+        
+        .card:hover {
+            border-color: #3a1b5e;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Badges */
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .badge-hot { background: var(--neon-pink); color: white; }
+        .badge-premium { background: #ff9900; color: white; }
+        .badge-vip { background: #0066ff; color: white; }
+
+        .card-icon {
+            font-size: 35px;
+            margin-bottom: 20px;
+            color: #ff3366;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 45px;
+        }
+        .card-icon img { width: 50px; height: 50px; object-fit: contain; }
+        .card-icon span { font-size: 40px; line-height: 1; display: inline-block; }
+
+        .card-title {
+            color: white;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-desc {
+            color: #555;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+        }
+
+        .explore-btn {
+            border: 1px solid #333;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            display: inline-block;
+        }
+        .card:hover .explore-btn { background: white; color: black; border-color: white; }
+
+        /* Footer Styling */
+        .footer {
+            margin-top: auto;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            background: #030107;
+            font-size: 12px;
+            color: var(--text-gray);
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 30px; }
+            .hero-actions { flex-direction: column; }
+            .action-btn { width: 100%; justify-content: center; }
+            .header { padding: 20px 20px; }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- LOGIN -->
-  <div id="login-screen">
-    <div class="login-box">
-      <h2><i class="fas fa-shield-alt"></i> KGFF ADMIN</h2>
-      <input type="text" id="admin-user" class="input-field" placeholder="Username" value="admin">
-      <input type="password" id="admin-pass" class="input-field" placeholder="Password">
-      <button class="btn" style="width:100%; margin-top:8px;" onclick="doLogin()">
-        <i class="fas fa-sign-in-alt"></i> LOGIN TO DASHBOARD
-      </button>
-      <p style="margin-top:14px; font-size:11px; color:var(--muted);">Default: admin / admin123</p>
-    </div>
-  </div>
+    <div class="bg-glow"></div>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <h2>KGFF ADMIN</h2>
-    <div class="nav-item active" onclick="showPage('dashboard')">
-      <i class="fas fa-chart-pie"></i> <span>Dashboard</span>
-    </div>
-    <a href="https://fmd147726-crypto.github.io/kg-ff-panel/" target="_blank" class="nav-item">
-      <i class="fas fa-globe"></i> <span>Visit Main Site</span>
-    </a>
-    <a href="https://imgbb.com/" target="_blank" class="nav-item">
-      <i class="fas fa-image"></i> <span>ImgBB Upload</span>
-    </a>
-    <a href="https://postimages.org/" target="_blank" class="nav-item">
-      <i class="fas fa-cloud-upload-alt"></i> <span>PostImages</span>
-    </a>
-    <div class="nav-item" onclick="showPage('categories')">
-      <i class="fas fa-th-large"></i> <span>Categories</span>
-    </div>
-    <div class="nav-item" onclick="showPage('links')">
-      <i class="fas fa-link"></i> <span>Global Links</span>
-    </div>
-    <div class="nav-item" style="margin-top:auto; color:#ff4444;" onclick="doLogout()">
-      <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
-    </div>
-  </aside>
+    <!-- Header Section -->
+    <header class="header">
+        <a href="index.html" class="brand">
+            <img src="logo.png" alt="Logo" class="site-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/888/888879.png'">
+            <div class="brand-text">
+                <h2>KG FF PANEL</h2>
+                <p>PREMIUM CORP</p>
+            </div>
+        </a>
 
-  <!-- MAIN -->
-  <main class="main-content">
+        <!-- এখানে dynamic-discord ক্লাস যোগ করা হয়েছে -->
+        <a href="https://discord.gg/ZBjSWaF7u" target="_blank" class="header-btn dynamic-discord">
+            <i class="fab fa-discord"></i> Join Discord
+        </a>
+    </header>
 
-    <!-- DASHBOARD PAGE -->
-    <div id="page-dashboard">
-      <h1 class="page-title">Overview Dashboard</h1>
-      <div class="grid-2">
-        <div class="card-panel">
-          <h3><i class="fab fa-discord"></i> GLOBAL DISCORD LINK</h3>
-          <input type="text" id="discord-input" class="input-field" placeholder="https://discord.gg/...">
-          <button class="btn" onclick="saveDiscord()"><i class="fas fa-save"></i> SAVE DISCORD</button>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="status-badge">
+            <i class="fas fa-circle"></i> LIVE SERVER ACTIVE
         </div>
-        <div class="card-panel">
-          <h3><i class="fas fa-gem"></i> GLOBAL TOP-UP LINK</h3>
-          <input type="text" id="topup-input" class="input-field" placeholder="https://codashop.com/">
-          <button class="btn" onclick="saveTopup()"><i class="fas fa-save"></i> SAVE TOPUP</button>
+        
+        <h1>KG FF <span>PANEL</span></h1>
+        <p class="hero-subtitle">NEXT GEN PRIVATE SOLUTIONS • SECURE • RELIABLE</p>
+
+        <div class="hero-actions">
+            <!-- এখানে dynamic-discord ক্লাস যোগ করা হয়েছে -->
+            <a href="https://discord.gg/ZBjSWaF7u" target="_blank" class="action-btn dynamic-discord">
+                <i class="fab fa-discord"></i> Join Support Discord →
+            </a>
+            <a href="https://rijuedit.github.io/oxi-topup/" target="_blank" class="action-btn">
+                <i class="fas fa-gem"></i> Free Fire Diamond Topup →
+            </a>
+            <a href="#" class="icon-btn">
+                <i class="fas fa-bell"></i>
+            </a>
         </div>
-      </div>
-      <div class="card-panel">
-        <h3><i class="fas fa-video"></i> PAGE VIDEO URLs</h3>
-        <div style="display:grid; gap:12px;">
-          <div>
-            <label style="font-size:12px; color:var(--muted);">Free Panel Video</label>
-            <input type="text" id="video-free-panel" class="input-field" placeholder="https://www.youtube.com/embed/...">
-          </div>
-          <div>
-            <label style="font-size:12px; color:var(--muted);">Free Bypass Video</label>
-            <input type="text" id="video-free-bypass" class="input-field" placeholder="https://www.youtube.com/embed/...">
-          </div>
-          <div>
-            <label style="font-size:12px; color:var(--muted);">Emulator Video</label>
-            <input type="text" id="video-emulator" class="input-field" placeholder="https://www.youtube.com/embed/...">
-          </div>
-          <button class="btn" onclick="saveVideos()"><i class="fas fa-save"></i> SAVE ALL VIDEOS</button>
-        </div>
-      </div>
-      <div class="card-panel">
-        <h3><i class="fas fa-key"></i> RAR PASSWORD & SKIP LINK</h3>
-        <div class="grid-2">
-          <div>
-            <label style="font-size:12px; color:var(--muted);">RAR Password</label>
-            <input type="text" id="rar-input" class="input-field" placeholder="1">
-          </div>
-          <div>
-            <label style="font-size:12px; color:var(--muted);">How to Skip Link</label>
-            <input type="text" id="skip-input" class="input-field" placeholder="https://youtube.com/...">
-          </div>
-        </div>
-        <button class="btn" onclick="saveRarSkip()"><i class="fas fa-save"></i> SAVE</button>
-      </div>
+    </section>
+
+    <div class="divider">// AVAILABLE SYSTEMS //</div>
+
+    <!-- Main Grid Cards -->
+    <div class="grid-container" id="category-grid">
+        
+        <!-- Free Panel -->
+        <a href="free-panel.html" class="card" id="card_free_panel">
+            <div class="badge badge-hot">HOT</div>
+            <div class="card-icon" id="icon_free_panel">💻</div>
+            <div class="card-title" id="title_free_panel">FREE PANEL</div>
+            <div class="card-desc">NEW PC PANEL UPDATED OB55</div>
+            <div class="explore-btn">EXPLORE →</div>
+        </a>
+
+        <!-- Free Bypass -->
+        <a href="free-bypass.html" class="card" id="card_free_bypass">
+            <div class="card-icon" id="icon_free_bypass">💻</div>
+            <div class="card-title" id="title_free_bypass">FREE BYPASS</div>
+            <div class="card-desc">FAST & RELIABLE MATCHMAKING</div>
+            <div class="explore-btn">EXPLORE →</div>
+        </a>
+
+        <!-- Emulator -->
+        <a href="emulator.html" class="card" id="card_emulator">
+            <div class="card-icon" id="icon_emulator"><i class="far fa-star"></i></div>
+            <div class="card-title" id="title_emulator">EMULATOR</div>
+            <div class="card-desc">BEST WORKING EMULATOR</div>
+            <div class="explore-btn">EXPLORE →</div>
+        </a>
+
+        <!-- Free Fire APK -->
+        <a href="free-fire-apk.html" class="card" id="card_apk">
+            <div class="card-icon" id="icon_apk"><i class="fas fa-bolt"></i></div>
+            <div class="card-title" id="title_apk">FREE FIRE APK</div>
+            <div class="card-desc">DOWNLOAD LATEST APK V2.0</div>
+            <div class="explore-btn">EXPLORE →</div>
+        </a>
+
+        <!-- Buy PC Panel -->
+        <a href="pc-paid-panel.html" class="card" id="card_pc_panel">
+            <div class="badge badge-premium">PREMIUM</div>
+            <div class="card-icon" id="icon_pc_panel"><i class="fas fa-desktop"></i></div>
+            <div class="card-title" id="title_pc_panel">BUY PC PANEL</div>
+            <div class="card-desc">ADVANCED VIP FEATURES FOR PC</div>
+            <div class="explore-btn">EXPLORE →</div>
+        </a>
+
+        <!-- Buy Mobile Panel -->
+        <a href="paid-mobile-panel.html" class="card" id="card_mobile_panel">
+            <div class="badge badge-vip">VIP</div>
+            <div class="card-icon" id="icon_mobile_panel"><i class="fas fa-mobile-alt"></i></div>
+            <div class="card-title" id="title_mobile_panel">BUY MOBILE PANEL</div>
+            <div class="card-desc">SAFE VIP PANEL FOR ANDROID/IOS</div>
+            <div class="explore-btn">EXPLORE →</div>
+        </a>
+
     </div>
 
-    <!-- CATEGORIES PAGE -->
-    <div id="page-categories" class="hidden">
-      <h1 class="page-title">Homepage Categories Visibility</h1>
-      <div class="card-panel">
-        <h3><i class="fas fa-eye"></i> SHOW / HIDE CARDS ON MAIN SITE</h3>
-        <div id="category-list"></div>
-      </div>
-    </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 KG FF PANEL. All rights reserved.</p>
+    </footer>
 
-    <!-- LINKS PAGE -->
-    <div id="page-links" class="hidden">
-      <h1 class="page-title">Quick Link Manager</h1>
-      <div class="card-panel">
-        <p style="color:var(--muted); font-size:14px; margin-bottom:16px;">
-          All links saved here are pushed live to Firebase and instantly update on your main site
-          (<strong>kg-ff-panel</strong>).
-        </p>
-        <p style="font-size:13px; color:var(--green);">
-          <i class="fas fa-check-circle"></i> Firebase Connected: bangla-ff-admin
-        </p>
-      </div>
-    </div>
+    <!-- Firebase Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  </main>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDOFL6dKvw_RfyKMe3QQgvE4lt7Gtc4yaM",
+            authDomain: "bangla-ff-admin.firebaseapp.com",
+            databaseURL: "https://bangla-ff-admin-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "bangla-ff-admin",
+            storageBucket: "bangla-ff-admin.firebasestorage.app",
+            messagingSenderId: "295013484465",
+            appId: "1:295013484465:web:b6bc2a949e239095761f90"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-  <div class="toast" id="toast"></div>
-
-  <!-- FIREBASE SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDOFL6dKvw_RfyKMe3QQgvE4lt7Gtc4yaM",
-      authDomain: "bangla-ff-admin.firebaseapp.com",
-      databaseURL: "https://bangla-ff-admin-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "bangla-ff-admin",
-      storageBucket: "bangla-ff-admin.firebasestorage.app",
-      messagingSenderId: "295013484465",
-      appId: "1:295013484465:web:b6bc2a949e239095761f90"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    // Expose to global scope for onclick handlers
-    window.db = db;
-    window.fbRef = ref;
-    window.fbSet = set;
-    window.fbGet = get;
-    window.fbUpdate = update;
-    window.fbOnValue = onValue;
-
-    // ========== AUTH ==========
-    window.doLogin = function() {
-      const u = document.getElementById('admin-user').value.trim();
-      const p = document.getElementById('admin-pass').value;
-      if (u === 'admin' && p === 'admin123') {
-        localStorage.setItem('kgff_admin_token', 'authenticated');
-        document.getElementById('login-screen').style.display = 'none';
-        loadAllData();
-      } else {
-        alert('Wrong username or password!\nDefault: admin / admin123');
-      }
-    };
-
-    window.doLogout = function() {
-      localStorage.removeItem('kgff_admin_token');
-      location.reload();
-    };
-
-    if (localStorage.getItem('kgff_admin_token') === 'authenticated') {
-      document.getElementById('login-screen').style.display = 'none';
-      loadAllData();
-    }
-
-    // ========== NAVIGATION ==========
-    window.showPage = function(page) {
-      document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
-      document.getElementById('page-' + page).classList.remove('hidden');
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-    };
-
-    // ========== TOAST ==========
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.innerHTML = '<i class="fas fa-check-circle"></i> ' + msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2800);
-    }
-    window.showToast = showToast;
-
-    // ========== LOAD DATA FROM FIREBASE ==========
-    function loadAllData() {
-      // Discord
-      onValue(ref(db, 'global_settings/discord_link'), snap => {
-        if (snap.exists()) document.getElementById('discord-input').value = snap.val();
-      });
-      // Topup
-      onValue(ref(db, 'global_settings/topup_link'), snap => {
-        if (snap.exists()) document.getElementById('topup-input').value = snap.val();
-      });
-      // Videos
-      onValue(ref(db, 'global_settings/videos'), snap => {
-        if (snap.exists()) {
-          const v = snap.val();
-          if (v.free_panel) document.getElementById('video-free-panel').value = v.free_panel;
-          if (v.free_bypass) document.getElementById('video-free-bypass').value = v.free_bypass;
-          if (v.emulator) document.getElementById('video-emulator').value = v.emulator;
-        }
-      });
-      // RAR + Skip
-      onValue(ref(db, 'global_settings/rar_password'), snap => {
-        if (snap.exists()) document.getElementById('rar-input').value = snap.val();
-      });
-      onValue(ref(db, 'global_settings/how_to_skip'), snap => {
-        if (snap.exists()) document.getElementById('skip-input').value = snap.val();
-      });
-      // Categories
-      renderCategories();
-    }
-
-    // ========== SAVE FUNCTIONS ==========
-    window.saveDiscord = function() {
-      const val = document.getElementById('discord-input').value.trim();
-      set(ref(db, 'global_settings/discord_link'), val)
-        .then(() => { localStorage.setItem('kgff_discord_link', val); showToast('Discord link saved to Firebase!'); })
-        .catch(e => alert('Error: ' + e.message));
-    };
-
-    window.saveTopup = function() {
-      const val = document.getElementById('topup-input').value.trim();
-      set(ref(db, 'global_settings/topup_link'), val)
-        .then(() => { localStorage.setItem('kgff_topup_link', val); showToast('Top-Up link saved to Firebase!'); })
-        .catch(e => alert('Error: ' + e.message));
-    };
-
-    window.saveVideos = function() {
-      const data = {
-        free_panel: document.getElementById('video-free-panel').value.trim(),
-        free_bypass: document.getElementById('video-free-bypass').value.trim(),
-        emulator: document.getElementById('video-emulator').value.trim()
-      };
-      set(ref(db, 'global_settings/videos'), data)
-        .then(() => {
-          localStorage.setItem('kgff_free_panel_video', data.free_panel);
-          localStorage.setItem('kgff_free_bypass_video', data.free_bypass);
-          localStorage.setItem('kgff_emulator_video', data.emulator);
-          showToast('All videos saved to Firebase!');
-        })
-        .catch(e => alert('Error: ' + e.message));
-    };
-
-    window.saveRarSkip = function() {
-      const rar = document.getElementById('rar-input').value.trim() || '1';
-      const skip = document.getElementById('skip-input').value.trim();
-      Promise.all([
-        set(ref(db, 'global_settings/rar_password'), rar),
-        set(ref(db, 'global_settings/how_to_skip'), skip)
-      ]).then(() => {
-        localStorage.setItem('kgff_rar_password', rar);
-        localStorage.setItem('kgff_how_to_skip', skip);
-        showToast('RAR + Skip link saved!');
-      }).catch(e => alert('Error: ' + e.message));
-    };
-
-    // ========== CATEGORIES ==========
-    const CAT_KEYS = [
-      { key: 'free_panel', label: 'Free Panel' },
-      { key: 'free_bypass', label: 'Free Bypass' },
-      { key: 'emulator', label: 'Emulator' },
-      { key: 'apk', label: 'Free Fire APK' },
-      { key: 'pc_panel', label: 'Buy PC Panel' },
-      { key: 'mobile_panel', label: 'Buy Mobile Panel' }
-    ];
-
-    function renderCategories() {
-      const box = document.getElementById('category-list');
-      box.innerHTML = '';
-      CAT_KEYS.forEach(cat => {
-        const row = document.createElement('div');
-        row.className = 'switch-row';
-        row.innerHTML = `
-          <span id="label-${cat.key}">${cat.label}</span>
-          <button class="btn btn-sm" id="btn-${cat.key}" onclick="toggleCat('${cat.key}')">...</button>
-        `;
-        box.appendChild(row);
-
-        onValue(ref(db, `site_visibility/${cat.key}`), snap => {
-          const visible = !snap.exists() || snap.val() === true;
-          const btn = document.getElementById('btn-' + cat.key);
-          if (!btn) return;
-          btn.innerHTML = visible
-            ? '<span class="status-dot dot-on"></span> VISIBLE (ON)'
-            : '<span class="status-dot dot-off"></span> HIDDEN (OFF)';
-          btn.className = visible ? 'btn btn-sm btn-green' : 'btn btn-sm btn-secondary';
+        // --- Discord Auto Link Fetcher ---
+        onValue(ref(db, 'global_settings/discord_link'), (snapshot) => {
+            if (snapshot.exists()) {
+                const link = snapshot.val();
+                document.querySelectorAll('.dynamic-discord').forEach(btn => {
+                    btn.href = link;
+                });
+            }
         });
-      });
-    }
+        // ----------------------------------------------
 
-    window.toggleCat = function(key) {
-      get(ref(db, `site_visibility/${key}`)).then(snap => {
-        const current = !snap.exists() || snap.val() === true;
-        set(ref(db, `site_visibility/${key}`), !current)
-          .then(() => showToast(key + ' visibility updated!'));
-      });
-    };
-  </script>
+        // Smart Icon Renderer (FontAwesome + Emoji + Image)
+        function renderIcon(iconDiv, data) {
+            if (!iconDiv || !data) return;
+            const val = (data.iconValue || '').trim();
+            if (!val) return;
+
+            if (data.iconType === 'image' || val.startsWith('http')) {
+                iconDiv.innerHTML = `<img src="${val}" alt="icon">`;
+            } else if (data.iconType === 'emoji' || (!val.includes('fa-') && !val.startsWith('http'))) {
+                // Direct emoji or plain text
+                iconDiv.innerHTML = `<span>${val}</span>`;
+            } else {
+                // FontAwesome class
+                iconDiv.innerHTML = `<i class="${val}"></i>`;
+            }
+        }
+
+        const keys = ['free_panel', 'free_bypass', 'emulator', 'apk', 'pc_panel', 'mobile_panel'];
+        
+        keys.forEach(key => {
+            // Visibility Toggle
+            onValue(ref(db, `site_visibility/${key}`), s => {
+                const isVisible = !s.exists() || s.val() === true;
+                const card = document.getElementById(`card_${key}`);
+                if (card) {
+                    if (isVisible) card.classList.add('visible');
+                    else card.classList.remove('visible');
+                }
+            });
+
+            // Title + Icon Sync from Admin
+            onValue(ref(db, `site_settings/categories/${key}`), s => {
+                if (s.exists()) {
+                    const data = s.val();
+                    if (data.title) {
+                        const titleEl = document.getElementById(`title_${key}`);
+                        if (titleEl) titleEl.innerText = data.title;
+                    }
+                    const iconDiv = document.getElementById(`icon_${key}`);
+                    renderIcon(iconDiv, data);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
