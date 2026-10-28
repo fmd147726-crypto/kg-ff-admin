@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -255,6 +254,7 @@
         }
 
         .status-message.show { display: block; }
+
         .status-message.error {
             color: #fecaca;
             border: 1px solid #7f1d1d;
@@ -276,11 +276,16 @@
             .navbar { padding: 13px; }
             .navbar .orbitron { font-size: 11px; text-align: center; }
             .video-manager { margin: 12px; padding: 14px; }
-            .product-grid { padding: 12px; gap: 12px; grid-template-columns: repeat(auto-fill,minmax(145px,1fr)); }
+            .product-grid {
+                padding: 12px;
+                gap: 12px;
+                grid-template-columns: repeat(auto-fill,minmax(145px,1fr));
+            }
             .product-image { height: 120px; }
             .product-title { font-size: 11px; }
             .modal-body { padding: 16px 12px; }
             .package-header-grid { display: none; }
+
             .package-row {
                 grid-template-columns: 1fr 1fr;
                 padding: 12px;
@@ -288,6 +293,7 @@
                 border-radius: 8px;
                 background: #0a0611;
             }
+
             .package-row > div::before {
                 display: block;
                 color: #aaa;
@@ -295,6 +301,7 @@
                 margin-bottom: 4px;
                 text-transform: uppercase;
             }
+
             .package-row > div:nth-child(1)::before { content: "Duration"; }
             .package-row > div:nth-child(2)::before { content: "Unit"; }
             .package-row > div:nth-child(3)::before { content: "Old Price"; }
@@ -302,17 +309,26 @@
             .package-row > div:nth-child(5)::before { content: "Buy Price"; }
             .package-row > button { height: 38px; }
             .modal-footer { gap: 8px; flex-wrap: wrap; }
-            .btn-save, .btn-cancel, .btn-delete-modal { padding: 10px 12px; font-size: 11px; }
+
+            .btn-save,
+            .btn-cancel,
+            .btn-delete-modal {
+                padding: 10px 12px;
+                font-size: 11px;
+            }
         }
     </style>
 </head>
 
 <body>
+
     <nav class="navbar">
         <a href="index.html" class="btn-nav">BACK</a>
+
         <div class="orbitron text-sm md:text-lg font-bold tracking-widest">
             MANAGE PC PANEL
         </div>
+
         <div style="width:55px"></div>
     </nav>
 
@@ -321,6 +337,7 @@
         <label class="orbitron text-xs text-purple-400 block mb-2 uppercase">
             PC Setup Video URL
         </label>
+
         <div class="flex flex-col sm:flex-row gap-3">
             <input
                 type="url"
@@ -328,6 +345,7 @@
                 class="styled-input"
                 placeholder="YouTube or Drive Link..."
             >
+
             <button id="updateVideoBtn" class="btn-save whitespace-nowrap">
                 UPDATE
             </button>
@@ -336,47 +354,75 @@
 
     <div class="px-5 mt-6 flex justify-between items-center gap-3">
         <h2 class="orbitron text-sm md:text-lg font-bold">PRODUCTS</h2>
+
         <button id="addProductBtn" class="btn-add-pkg">
             + ADD PRODUCT
         </button>
     </div>
 
-    <div id="statusMessage" class="status-message" role="status" aria-live="polite"></div>
+    <div id="statusMessage"
+         class="status-message"
+         role="status"
+         aria-live="polite"></div>
 
     <div class="product-grid" id="productGrid">
-        <div class="text-gray-400 p-6">Loading products...</div>
+        <div class="text-gray-400 p-6">
+            Loading products...
+        </div>
     </div>
 
     <!-- Add/Edit Product Modal -->
     <div id="productModal" class="modal" role="dialog" aria-modal="true">
+
         <div class="modal-content">
+
             <div class="p-5 border-b border-gray-800 flex justify-between items-center gap-3">
+
                 <h2 class="orbitron text-sm md:text-lg font-bold" id="modalTitle">
                     Edit PC Panel
                 </h2>
-                <button id="closeModalBtn" class="text-gray-400 hover:text-white text-2xl" aria-label="Close">
+
+                <button id="closeModalBtn"
+                        class="text-gray-400 hover:text-white text-2xl"
+                        aria-label="Close">
                     &times;
                 </button>
             </div>
 
             <div class="modal-body">
+
                 <div class="mb-5">
                     <label class="text-xs text-gray-400 uppercase block mb-2" for="pTitle">
                         Panel Name
                     </label>
-                    <input type="text" id="pTitle" class="styled-input" placeholder="Enter Panel Name">
+
+                    <input
+                        type="text"
+                        id="pTitle"
+                        class="styled-input"
+                        placeholder="Enter Panel Name"
+                    >
                 </div>
 
                 <div class="mb-6">
                     <label class="text-xs text-gray-400 uppercase block mb-2" for="pImage">
                         Image URL
                     </label>
-                    <input type="url" id="pImage" class="styled-input" placeholder="Enter Image URL">
+
+                    <input
+                        type="url"
+                        id="pImage"
+                        class="styled-input"
+                        placeholder="Enter Image URL"
+                    >
                 </div>
 
                 <div class="flex justify-between items-center gap-3 mb-3">
                     <h3 class="orbitron text-sm font-bold">Packages</h3>
-                    <button id="addPackageBtn" class="btn-add-pkg">+ Add Package</button>
+
+                    <button id="addPackageBtn" class="btn-add-pkg">
+                        + Add Package
+                    </button>
                 </div>
 
                 <hr class="border-gray-800 mb-4">
@@ -391,22 +437,33 @@
                 </div>
 
                 <div id="packageContainer"></div>
+
             </div>
 
             <div class="modal-footer p-4 border-t border-gray-800 flex justify-between items-center bg-[#0f0a19]">
+
                 <button id="modalDeleteBtn" class="btn-delete-modal hidden">
                     Delete Product
                 </button>
 
                 <div class="flex gap-3 ml-auto">
-                    <button id="cancelModalBtn" class="btn-cancel">Cancel</button>
-                    <button id="saveBtn" class="btn-save">Save Product</button>
+
+                    <button id="cancelModalBtn" class="btn-cancel">
+                        Cancel
+                    </button>
+
+                    <button id="saveBtn" class="btn-save">
+                        Save Product
+                    </button>
+
                 </div>
             </div>
+
         </div>
     </div>
 
     <script type="module">
+
         import { initializeApp } from
             "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
@@ -424,15 +481,15 @@
         // ================= FIREBASE =================
 
         const firebaseConfig = {
-  apiKey: "AIzaSyCp4Kc-rt3umBsiBXyIIqVgge6CcxOxEsw",
-  authDomain: "kg-ff-panel.firebaseapp.com",
-  databaseURL: "https://kg-ff-panel-default-rtdb.firebaseio.com",
-  projectId: "kg-ff-panel",
-  storageBucket: "kg-ff-panel.firebasestorage.app",
-  messagingSenderId: "28109210766",
-  appId: "1:28109210766:web:18ddc0e885d442f301f5df",
-  measurementId: "G-7GYDLY2H30"
-};
+            apiKey: "AIzaSyCp4Kc-rt3umBsiBXyIIqVgge6CcxOxEsw",
+            authDomain: "kg-ff-panel.firebaseapp.com",
+            databaseURL: "https://kg-ff-panel-default-rtdb.firebaseio.com",
+            projectId: "kg-ff-panel",
+            storageBucket: "kg-ff-panel.firebasestorage.app",
+            messagingSenderId: "28109210766",
+            appId: "1:28109210766:web:18ddc0e885d442f301f5df",
+            measurementId: "G-7GYDLY2H30"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
@@ -442,11 +499,18 @@
 
         const $ = (id) => document.getElementById(id);
 
+        // ================= STATUS =================
+
         function showStatus(message, type = "success") {
             const box = $("statusMessage");
+
             box.textContent = message;
             box.className = `status-message show ${type}`;
-            box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+            box.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
         }
 
         function clearStatus() {
@@ -454,9 +518,22 @@
             $("statusMessage").className = "status-message";
         }
 
+        function showValidationError(message, input = null) {
+            alert(message);
+
+            if (input) {
+                input.focus();
+                input.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+            }
+        }
+
         // ================= VIDEO LINK =================
 
         $("updateVideoBtn").addEventListener("click", async () => {
+
             const url = $("videoUrlInput").value.trim();
             const btn = $("updateVideoBtn");
 
@@ -468,13 +545,21 @@
             btn.disabled = true;
 
             try {
+
                 await set(ref(db, "settings/video_pc"), url);
+
                 showStatus("PC Setup Video Link Updated Successfully!");
+
             } catch (error) {
-                console.error(error);
-                showStatus("Video link save failed. Check Firebase permissions.", "error");
+
+                console.error("Video save error:", error);
+
+                showStatus("Video link save failed: " + error.message, "error");
+
             } finally {
+
                 btn.disabled = false;
+
             }
         });
 
@@ -485,35 +570,37 @@
             },
             (error) => {
                 console.error("Video settings error:", error);
-                showStatus("Could not load video settings.", "error");
+                showStatus("Could not load video settings: " + error.message, "error");
             }
         );
 
         // ================= DURATION PARSER =================
 
         function parseDuration(pkg = {}) {
+
             let val = pkg.durationValue ?? pkg.val ?? "";
             let unit = pkg.durationUnit ?? pkg.unit ?? "Hours";
+
             const duration = String(pkg.duration ?? "").trim();
 
             if (val === "" && duration) {
+
                 const match = duration.match(/^(\d+(?:\.\d+)?)\s+(.+)$/);
 
                 if (match) {
+
                     val = match[1];
                     unit = match[2];
+
                 } else if (/^\d+(?:\.\d+)?$/.test(duration)) {
+
                     val = duration;
-                } else {
-                    // Legacy text duration, e.g. "Lifetime"
-                    const knownUnits = ["Hours", "Days", "Months", "Lifetime"];
-                    if (knownUnits.includes(duration)) {
-                        val = duration === "Lifetime" ? "1" : "";
-                        unit = duration;
-                    } else {
-                        val = "";
-                        unit = "Hours";
-                    }
+
+                } else if (duration === "Lifetime") {
+
+                    val = "1";
+                    unit = "Lifetime";
+
                 }
             }
 
@@ -523,26 +610,26 @@
                 unit = "Hours";
             }
 
-            return { val, unit };
+            return {
+                val: String(val),
+                unit
+            };
         }
 
         // ================= PACKAGE ROW =================
 
         function addPackageRow(data = {}) {
+
             const container = $("packageContainer");
+
             const row = document.createElement("div");
             row.className = "package-row";
 
             const parsed = parseDuration(data);
 
-            const fields = [
-                { cls: "pkg-val", type: "number", value: parsed.val, placeholder: "1", min: "1" },
-                { cls: "pkg-old", type: "number", value: data.old ?? data.old_price ?? "", placeholder: "Old Price", min: "0" },
-                { cls: "pkg-sell", type: "number", value: data.sell ?? data.sell_price ?? "", placeholder: "Sale Price", min: "0" },
-                { cls: "pkg-buy", type: "number", value: data.buy ?? data.buy_price ?? "", placeholder: "Buy Price", min: "0" }
-            ];
-
+            // Duration
             const durationBox = document.createElement("div");
+
             const durationInput = document.createElement("input");
             durationInput.type = "number";
             durationInput.min = "1";
@@ -550,17 +637,23 @@
             durationInput.className = "styled-input pkg-val";
             durationInput.placeholder = "1";
             durationInput.value = parsed.val;
+
             durationBox.appendChild(durationInput);
 
+            // Unit
             const unitBox = document.createElement("div");
+
             const unitSelect = document.createElement("select");
             unitSelect.className = "styled-input pkg-unit";
 
             ["Hours", "Days", "Months", "Lifetime"].forEach((unit) => {
+
                 const option = document.createElement("option");
                 option.value = unit;
                 option.textContent = unit;
+
                 unitSelect.appendChild(option);
+
             });
 
             unitSelect.value = parsed.unit;
@@ -568,12 +661,32 @@
 
             row.append(durationBox, unitBox);
 
-            fields.slice(1).forEach((field) => {
-                const box = document.createElement("div");
-                const input = document.createElement("input");
+            // Prices
+            const priceFields = [
+                {
+                    cls: "pkg-old",
+                    value: data.old ?? data.old_price ?? "",
+                    placeholder: "Old Price"
+                },
+                {
+                    cls: "pkg-sell",
+                    value: data.sell ?? data.sell_price ?? "",
+                    placeholder: "Sale Price"
+                },
+                {
+                    cls: "pkg-buy",
+                    value: data.buy ?? data.buy_price ?? "",
+                    placeholder: "Buy Price"
+                }
+            ];
 
-                input.type = field.type;
-                input.min = field.min;
+            priceFields.forEach((field) => {
+
+                const box = document.createElement("div");
+
+                const input = document.createElement("input");
+                input.type = "number";
+                input.min = "0";
                 input.step = "any";
                 input.className = `styled-input ${field.cls}`;
                 input.placeholder = field.placeholder;
@@ -581,158 +694,348 @@
 
                 box.appendChild(input);
                 row.appendChild(box);
+
             });
 
+            // Remove Package
             const removeBtn = document.createElement("button");
             removeBtn.type = "button";
             removeBtn.className = "btn-remove-pkg";
             removeBtn.innerHTML = '<i class="fas fa-times"></i>';
             removeBtn.title = "Remove package";
-            removeBtn.addEventListener("click", () => row.remove());
+
+            removeBtn.addEventListener("click", () => {
+                row.remove();
+            });
 
             row.appendChild(removeBtn);
             container.appendChild(row);
+
         }
 
         // ================= MODAL CONTROLS =================
 
         function resetModal() {
+
             $("pTitle").value = "";
             $("pImage").value = "";
+
             $("packageContainer").innerHTML = "";
+
             $("modalTitle").textContent = "Add New Product";
+
             $("modalDeleteBtn").classList.add("hidden");
+
             $("saveBtn").textContent = "Save Product";
+
             clearStatus();
+
         }
 
         function openModal(mode, id = null) {
+
             currentEditId = id;
+
             resetModal();
 
             if (mode === "add") {
+
                 addPackageRow();
+
             } else {
+
                 $("modalTitle").textContent = "Edit PC Panel";
                 $("modalDeleteBtn").classList.remove("hidden");
+
             }
 
             $("productModal").style.display = "flex";
+
         }
 
         function closeModal() {
+
             if (isSaving) return;
+
             $("productModal").style.display = "none";
+
             clearStatus();
+
         }
 
         $("addProductBtn").addEventListener("click", () => openModal("add"));
+
         $("addPackageBtn").addEventListener("click", () => addPackageRow());
+
         $("closeModalBtn").addEventListener("click", closeModal);
+
         $("cancelModalBtn").addEventListener("click", closeModal);
 
         $("productModal").addEventListener("click", (event) => {
-            if (event.target === $("productModal")) closeModal();
+
+            if (event.target === $("productModal")) {
+                closeModal();
+            }
+
         });
 
         document.addEventListener("keydown", (event) => {
-            if (event.key === "Escape" && $("productModal").style.display === "flex") {
+
+            if (
+                event.key === "Escape" &&
+                $("productModal").style.display === "flex"
+            ) {
                 closeModal();
             }
+
         });
 
         // ================= SAVE PRODUCT =================
 
         async function saveProduct(mode) {
+
             if (isSaving) return;
 
             const title = $("pTitle").value.trim();
             const image = $("pImage").value.trim();
 
             if (!title) {
-                alert("Please enter a Panel Name.");
-                $("pTitle").focus();
+
+                showValidationError(
+                    "Please enter a Panel Name.",
+                    $("pTitle")
+                );
+
                 return;
             }
 
             if (image && !/^https?:\/\/\S+$/i.test(image)) {
-                alert("Please enter a valid Image URL.");
-                $("pImage").focus();
+
+                showValidationError(
+                    "Please enter a valid Image URL.",
+                    $("pImage")
+                );
+
                 return;
             }
 
             const packages = [];
-            const rows = document.querySelectorAll(".package-row");
 
-            for (const row of rows) {
-                const val = row.querySelector(".pkg-val").value.trim();
-                const unit = row.querySelector(".pkg-unit").value;
-                const old = row.querySelector(".pkg-old").value.trim();
-                const sell = row.querySelector(".pkg-sell").value.trim();
-                const buy = row.querySelector(".pkg-buy").value.trim();
+            // Only read package rows inside this modal
+            const rows = $("packageContainer").querySelectorAll(".package-row");
 
-                // Ignore completely empty package rows.
-                if (!val && !old && !sell && !buy) continue;
+            for (let index = 0; index < rows.length; index++) {
 
-                if (unit !== "Lifetime" && (!val || Number(val) <= 0)) {
-                    alert("Please enter a valid duration for every package.");
+                const row = rows[index];
+
+                const durationInput = row.querySelector(".pkg-val");
+                const unitInput = row.querySelector(".pkg-unit");
+                const oldInput = row.querySelector(".pkg-old");
+                const sellInput = row.querySelector(".pkg-sell");
+                const buyInput = row.querySelector(".pkg-buy");
+
+                if (
+                    !durationInput ||
+                    !unitInput ||
+                    !oldInput ||
+                    !sellInput ||
+                    !buyInput
+                ) {
+
+                    showValidationError(
+                        `Package ${index + 1}: Some input fields are missing.`
+                    );
+
                     return;
                 }
 
-                if (sell === "" || !Number.isFinite(Number(sell)) || Number(sell) < 0) {
-                    alert("Please enter a valid Sale Price for every package.");
+                const val = durationInput.value.trim();
+                const unit = unitInput.value;
+
+                const old = oldInput.value.trim();
+                const sell = sellInput.value.trim();
+                const buy = buyInput.value.trim();
+
+                const packageNumber = index + 1;
+
+                // Ignore fully empty package rows
+                if (!val && !old && !sell && !buy) {
+                    continue;
+                }
+
+                // Duration validation
+                const durationNumber = Number(val);
+
+                if (
+                    unit !== "Lifetime" &&
+                    (
+                        val === "" ||
+                        !Number.isFinite(durationNumber) ||
+                        !Number.isInteger(durationNumber) ||
+                        durationNumber <= 0
+                    )
+                ) {
+
+                    showValidationError(
+                        `Package ${packageNumber}: Invalid Duration.\n` +
+                        `Entered value: "${val}"\n` +
+                        `Please enter a whole number greater than 0.`,
+                        durationInput
+                    );
+
                     return;
                 }
+
+                // Sale price validation
+                if (
+                    sell === "" ||
+                    !Number.isFinite(Number(sell)) ||
+                    Number(sell) < 0
+                ) {
+
+                    showValidationError(
+                        `Package ${packageNumber}: Please enter a valid Sale Price.`,
+                        sellInput
+                    );
+
+                    return;
+                }
+
+                // Old price validation
+                if (
+                    old !== "" &&
+                    (
+                        !Number.isFinite(Number(old)) ||
+                        Number(old) < 0
+                    )
+                ) {
+
+                    showValidationError(
+                        `Package ${packageNumber}: Please enter a valid Old Price.`,
+                        oldInput
+                    );
+
+                    return;
+                }
+
+                // Buy price validation
+                if (
+                    buy !== "" &&
+                    (
+                        !Number.isFinite(Number(buy)) ||
+                        Number(buy) < 0
+                    )
+                ) {
+
+                    showValidationError(
+                        `Package ${packageNumber}: Please enter a valid Buy Price.`,
+                        buyInput
+                    );
+
+                    return;
+                }
+
+                const finalDuration =
+                    unit === "Lifetime"
+                        ? "Lifetime"
+                        : `${durationNumber} ${unit}`;
 
                 packages.push({
-                    duration: unit === "Lifetime" ? "Lifetime" : `${val} ${unit}`,
-                    durationValue: unit === "Lifetime" ? "1" : val,
+
+                    duration: finalDuration,
+
+                    durationValue:
+                        unit === "Lifetime"
+                            ? "1"
+                            : String(durationNumber),
+
                     durationUnit: unit,
+
                     old_price: old,
                     sell_price: sell,
                     buy_price: buy
+
                 });
+
             }
 
             if (packages.length === 0) {
-                alert("Please add at least one package with a Sale Price.");
+
+                showValidationError(
+                    "Please add at least one package with a Sale Price."
+                );
+
                 return;
             }
 
-            const data = { title, image, packages };
+            const data = {
+                title,
+                image,
+                packages
+            };
 
             isSaving = true;
+
             $("saveBtn").disabled = true;
             $("saveBtn").textContent = "SAVING...";
 
             try {
+
                 if (mode === "add") {
-                    await push(ref(db, "pc_panels"), data);
+
+                    const productRef = push(ref(db, "pc_panels"));
+
+                    await set(productRef, data);
+
                     showStatus("Product added successfully!");
+
                 } else {
-                    if (!currentEditId) throw new Error("Product ID missing.");
-                    await update(ref(db, `pc_panels/${currentEditId}`), data);
+
+                    if (!currentEditId) {
+                        throw new Error("Product ID missing.");
+                    }
+
+                    await update(
+                        ref(db, `pc_panels/${currentEditId}`),
+                        data
+                    );
+
                     showStatus("Product updated successfully!");
+
                 }
 
                 $("productModal").style.display = "none";
+
             } catch (error) {
+
                 console.error("Save product error:", error);
-                alert("Could not save product. Check your Firebase Database Rules and connection.");
+
+                alert(
+                    "Could not save product.\n\n" +
+                    "Firebase Error: " + error.message
+                );
+
             } finally {
+
                 isSaving = false;
+
                 $("saveBtn").disabled = false;
                 $("saveBtn").textContent = "Save Product";
+
             }
+
         }
 
         $("saveBtn").addEventListener("click", () => {
+
             saveProduct(currentEditId ? "edit" : "add");
+
         });
 
         // ================= DELETE PRODUCT =================
 
         $("modalDeleteBtn").addEventListener("click", async () => {
+
             if (!currentEditId || isSaving) return;
 
             const confirmed = confirm(
@@ -742,64 +1045,100 @@
             if (!confirmed) return;
 
             isSaving = true;
+
             $("modalDeleteBtn").disabled = true;
 
             try {
-                await remove(ref(db, `pc_panels/${currentEditId}`));
+
+                await remove(
+                    ref(db, `pc_panels/${currentEditId}`)
+                );
+
                 $("productModal").style.display = "none";
+
                 showStatus("Product deleted successfully!");
+
             } catch (error) {
+
                 console.error("Delete product error:", error);
-                alert("Could not delete product. Check Firebase permissions.");
+
+                alert(
+                    "Could not delete product.\n\n" +
+                    error.message
+                );
+
             } finally {
+
                 isSaving = false;
+
                 $("modalDeleteBtn").disabled = false;
+
             }
+
         });
 
         // ================= RENDER PRODUCTS =================
 
         onValue(
+
             ref(db, "pc_panels"),
+
             (snapshot) => {
+
                 const grid = $("productGrid");
+
                 grid.innerHTML = "";
 
                 if (!snapshot.exists()) {
+
                     grid.innerHTML = `
                         <div class="text-gray-400 p-6">
                             No PC Panel products found. Click ADD PRODUCT to create one.
                         </div>
                     `;
+
                     return;
                 }
 
                 snapshot.forEach((childSnapshot) => {
+
                     const id = childSnapshot.key;
+
                     const product = childSnapshot.val() || {};
 
                     const card = document.createElement("article");
                     card.className = "product-card";
 
                     const details = document.createElement("div");
+
                     const img = document.createElement("img");
 
                     img.className = "product-image";
+
                     img.alt = product.title || "PC Panel";
+
                     img.src = product.image ||
                         "https://placehold.co/400x200/0d0818/ffffff?text=No+Image";
 
                     img.onerror = () => {
+
                         img.onerror = null;
-                        img.src = "https://placehold.co/400x200/0d0818/ffffff?text=No+Image";
+
+                        img.src =
+                            "https://placehold.co/400x200/0d0818/ffffff?text=No+Image";
+
                     };
 
                     const title = document.createElement("h3");
+
                     title.className = "product-title";
+
                     title.textContent = product.title || "Untitled Panel";
 
                     const packageCount = document.createElement("p");
+
                     packageCount.className = "text-xs text-gray-400 mb-3";
+
                     const list = Array.isArray(product.packages)
                         ? product.packages
                         : Object.values(product.packages || {});
@@ -809,30 +1148,51 @@
                     details.append(img, title, packageCount);
 
                     const editBtn = document.createElement("button");
+
                     editBtn.type = "button";
                     editBtn.className = "btn-card-edit";
                     editBtn.textContent = "EDIT PANEL";
-                    editBtn.addEventListener("click", () => editProduct(id));
+
+                    editBtn.addEventListener("click", () => {
+                        editProduct(id);
+                    });
 
                     card.append(details, editBtn);
+
                     grid.appendChild(card);
+
                 });
+
             },
+
             (error) => {
+
                 console.error("Product list error:", error);
-                showStatus("Could not load products. Check Firebase permissions.", "error");
+
+                showStatus(
+                    "Could not load products: " + error.message,
+                    "error"
+                );
+
             }
+
         );
 
         // ================= EDIT PRODUCT =================
 
         async function editProduct(id) {
+
             try {
-                const snapshot = await get(ref(db, `pc_panels/${id}`));
+
+                const snapshot = await get(
+                    ref(db, `pc_panels/${id}`)
+                );
 
                 if (!snapshot.exists()) {
+
                     alert("Product not found.");
                     return;
+
                 }
 
                 const product = snapshot.val() || {};
@@ -840,9 +1200,11 @@
                 openModal("edit", id);
 
                 $("pTitle").value = product.title || "";
+
                 $("pImage").value = product.image || "";
 
                 const container = $("packageContainer");
+
                 container.innerHTML = "";
 
                 const packages = Array.isArray(product.packages)
@@ -850,25 +1212,47 @@
                     : Object.values(product.packages || {});
 
                 if (packages.length) {
+
                     packages.forEach((pkg) => {
-                        // Pass the original fields so existing values remain intact.
+
                         addPackageRow({
+
                             durationValue: pkg.durationValue,
+
                             durationUnit: pkg.durationUnit,
+
                             duration: pkg.duration,
+
                             old_price: pkg.old_price,
+
                             sell_price: pkg.sell_price,
+
                             buy_price: pkg.buy_price
+
                         });
+
                     });
+
                 } else {
+
                     addPackageRow();
+
                 }
+
             } catch (error) {
+
                 console.error("Edit product error:", error);
-                alert("Could not load this product. Check Firebase permissions.");
+
+                alert(
+                    "Could not load this product.\n\n" +
+                    error.message
+                );
+
             }
+
         }
+
     </script>
+
 </body>
 </html>
