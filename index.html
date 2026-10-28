@@ -1,198 +1,698 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KGFF Panel Admin Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0a0b0f; --card: #12131a; --border: #1a1c26;
-      --red: #FF3366; --red-glow: rgba(255, 51, 102, 0.3); --text: #fff; --muted: #8c8ea0;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: 'Rajdhani', sans-serif; display: flex; min-height: 100vh; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - KG FF PANEL Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #05020a;
+            --bg-card: #11071a;
+            --border-color: #2a113d;
+            --neon-pink: #ff0066;
+            --neon-purple: #9d00ff;
+            --text-gray: #b0b0b0;
+            --text-light: #ffffff;
+            --green-glow: #00cc66;
+        }
 
-    #login-screen {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center;
-    }
-    .login-box {
-      background: var(--card); border: 1px solid var(--red); padding: 30px; border-radius: 12px;
-      width: 100%; max-width: 380px; box-shadow: 0 0 30px var(--red-glow); text-align: center;
-    }
-    .login-box h2 { font-family: 'Orbitron', sans-serif; color: var(--red); margin-bottom: 20px; }
-    .input-field {
-      width: 100%; padding: 12px; background: #181922; border: 1px solid var(--border);
-      border-radius: 6px; color: #fff; margin-bottom: 15px; font-family: inherit;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            cursor: default;
+        }
 
-    .sidebar { width: 260px; background: var(--card); border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; }
-    .sidebar h2 { font-family: 'Orbitron', sans-serif; color: var(--red); font-size: 1.2rem; margin-bottom: 30px; }
-    .nav-item { color: var(--muted); text-decoration: none; padding: 12px; border-radius: 6px; font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-    .nav-item.active, .nav-item:hover { background: #1a1c26; color: var(--red); }
-    
-    .main-content { flex: 1; padding: 30px; overflow-y: auto; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-    .header h1 { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    .card-panel { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 25px; }
-    .card-panel h3 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: var(--red); margin-bottom: 15px; }
-    
-    .btn { background: var(--red); color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
-    .btn-secondary { background: #1c1e2b; border: 1px solid var(--border); }
+        #mouse-glow {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(157, 0, 255, 0.15) 0%, transparent 70%);
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+        }
 
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1a1c26; }
-  </style>
+        /* Sidebar Styling */
+        .sidebar {
+            width: 250px;
+            background: rgba(12, 5, 20, 0.95);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--neon-purple);
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .sidebar-label {
+            color: #555;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin: 20px 0 10px 10px;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-gray);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(157, 0, 255, 0.1);
+            color: var(--neon-purple);
+        }
+
+        .nav-link.active {
+            border-left: 3px solid var(--neon-pink);
+        }
+
+        .visit-site-link {
+            color: var(--green-glow) !important;
+        }
+        .visit-site-link:hover {
+            background: rgba(0, 204, 102, 0.1) !important;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            border: 1px solid var(--neon-pink);
+            color: var(--neon-pink);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background: var(--neon-pink);
+            color: white;
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 40px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+        }
+
+        .header h1 span {
+            color: var(--neon-pink);
+        }
+
+        /* Grid Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 25px;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--neon-purple);
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            font-size: 30px;
+            margin-bottom: 20px;
+            color: var(--neon-purple);
+            background: rgba(157, 0, 255, 0.1);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+
+        .card-icon img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-light);
+            font-size: 13px;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-manage:hover { background: var(--neon-purple); border-color: var(--neon-purple); }
+        .btn-edit:hover { background: var(--neon-pink); border-color: var(--neon-pink); }
+
+        .visibility-control {
+            border-top: 1px dashed var(--border-color);
+            padding-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 22px;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px; width: 16px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: var(--green-glow); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        .status-label { font-size: 11px; font-weight: bold; }
+        .status-on { color: var(--green-glow); }
+        .status-off { color: var(--neon-pink); }
+
+        /* Discord & Action Buttons */
+        .discord-btn {
+            background: #5865F2;
+            border: none;
+            color: white;
+            padding: 0 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .discord-btn:hover {
+            background: #4752C4;
+            box-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
+        }
+
+        .add-new-btn {
+            background: var(--neon-pink);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .add-new-btn:hover {
+            background: #ff3385;
+            box-shadow: 0 0 15px rgba(255, 0, 102, 0.5);
+        }
+
+        /* Edit Box Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 2px solid var(--neon-purple);
+            width: 450px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(157, 0, 255, 0.3);
+        }
+
+        .modal h2 {
+            font-size: 20px;
+            color: var(--neon-pink);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: #0c0514;
+            border: 1px solid var(--border-color);
+            color: white;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .save-btn {
+            background: var(--neon-purple);
+            border: none;
+            color: white;
+            padding: 12px;
+            flex: 1;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .cancel-btn {
+            background: transparent;
+            border: 1px solid var(--text-gray);
+            color: var(--text-gray);
+            padding: 12px;
+            flex: 1;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: 1px solid #ff3333;
+            color: #ff3333;
+            padding: 12px;
+            flex: 1;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #ff3333;
+            color: white;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- LOGIN GATE -->
-  <div id="login-screen">
-    <div class="login-box">
-      <h2>KGFF ADMIN LOGIN</h2>
-      <input type="text" id="admin-user" class="input-field" placeholder="Username">
-      <input type="password" id="admin-pass" class="input-field" placeholder="Password">
-      <button class="btn" style="width:100%;" onclick="doLogin()">LOGIN TO DASHBOARD</button>
+    <div id="mouse-glow"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">KG FF PANEL</div>
+        
+        <a href="index.html" class="nav-link active">
+            <i class="fas fa-home"></i> Dashboard
+        </a>
+
+        <div class="sidebar-label">Website Control</div>
+        <a href="#" target="_blank" class="nav-link visit-site-link" id="visitSiteLink">
+            <i class="fas fa-external-link-alt"></i> Visit Site
+        </a>
+
+        <div class="sidebar-label">Tools</div>
+        <a href="https://imgbb.com/" target="_blank" class="nav-link"><i class="fas fa-cloud-upload-alt"></i> ImgBB</a>
+        <a href="https://postimages.org/" target="_blank" class="nav-link"><i class="fas fa-image"></i> PostImages</a>
+
+        <div class="sidebar-label">Paid Panels</div>
+        <a href="manage-pc.html" class="nav-link"><i class="fas fa-desktop"></i> Manage PC Panel</a>
+        <a href="manage-mobile.html" class="nav-link"><i class="fas fa-mobile-alt"></i> Manage Mobile Panel</a>
+
+        <div class="sidebar-label">System</div>
+        <a href="manage-notifications.html" class="nav-link"><i class="fas fa-bell"></i> Notifications</a>
+        <a href="manage-admins.html" class="nav-link"><i class="fas fa-users-cog"></i> Admin Users</a>
+
+        <a href="#" id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
-  </div>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <h2>KGFF ADMIN</h2>
-    <div class="nav-item active" onclick="switchPage('dashboard')">📊 Dashboard</div>
-    <a href="https://fmd147726-crypto.github.io/kg-ff-panel/" target="_blank" class="nav-item">🌐 Visit User Site</a>
-    <a href="https://imgbb.com/" target="_blank" class="nav-item">🖼️ ImgBB Host</a>
-    <a href="https://postimages.org/" target="_blank" class="nav-item">🖼️ PostImages Host</a>
-    <div class="nav-item" style="margin-top: auto; color: #ff4444;" onclick="doLogout()">🚪 Logout</div>
-  </aside>
-
-  <!-- MAIN DASHBOARD -->
-  <main class="main-content">
-    <div class="header">
-      <h1 id="page-title">Overview Dashboard</h1>
-      <button class="btn btn-secondary" onclick="doLogout()">Logout</button>
-    </div>
-
-    <!-- PAGE: DASHBOARD -->
-    <div id="page-dashboard">
-      <div class="grid-2">
-        <div class="card-panel">
-          <h3>GLOBAL DISCORD LINK</h3>
-          <input type="text" id="global-discord-input" class="input-field" placeholder="https://discord.gg/...">
-          <button class="btn" onclick="saveDiscordLink()">SAVE DISCORD LINK</button>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>KG FF PANEL <span>Dashboard</span></h1>
         </div>
 
-        <div class="card-panel">
-          <h3>GLOBAL TOP-UP LINK</h3>
-          <input type="text" id="global-topup-input" class="input-field" placeholder="https://codashop.com/">
-          <button class="btn" onclick="saveTopupLink()">SAVE TOPUP LINK</button>
+        <!-- Global Discord Settings Box -->
+        <div class="card" style="margin-bottom: 30px; border-color: #5865F2;">
+            <h3 class="card-title" style="color: #5865F2; display: flex; align-items: center; gap: 10px; font-size: 18px; margin-bottom: 8px;">
+                <i class="fab fa-discord"></i> Global Discord Settings
+            </h3>
+            <p style="color: var(--text-gray); font-size: 13px; margin-bottom: 20px;">
+                Update the Discord link here and it will change automatically across all pages of your main website.
+            </p>
+            <div style="display: flex; gap: 15px;">
+                <input type="text" id="discordInput" placeholder="https://discord.gg/yourlink" style="flex: 1; padding: 12px; background: #0c0514; border: 1px solid var(--border-color); color: white; border-radius: 8px; outline: none;">
+                <button id="saveDiscordBtn" class="discord-btn">Save Link</button>
+            </div>
         </div>
-      </div>
 
-      <div class="card-panel">
-        <h3>HOMEPAGE CATEGORY VISIBILITY</h3>
-        <div id="category-visibility-list"></div>
-      </div>
-    </div>
-  </main>
-
-  <script>
-    const FIREBASE_URL = "https://kg-ff-panel-default-rtdb.firebaseio.com";
-
-    document.addEventListener('DOMContentLoaded', () => {
-      checkAuth();
-      loadDashboardData();
-    });
-
-    function checkAuth() {
-      if (localStorage.getItem('kgff_admin_token') !== 'authenticated') {
-        document.getElementById('login-screen').style.display = 'flex';
-      } else {
-        document.getElementById('login-screen').style.display = 'none';
-      }
-    }
-
-    function doLogin() {
-      const u = document.getElementById('admin-user').value;
-      const p = document.getElementById('admin-pass').value;
-      if (u === 'admin' && p === 'admin123') {
-        localStorage.setItem('kgff_admin_token', 'authenticated');
-        document.getElementById('login-screen').style.display = 'none';
-      } else {
-        alert('Invalid Admin Credentials!');
-      }
-    }
-
-    function doLogout() {
-      localStorage.removeItem('kgff_admin_token');
-      location.reload();
-    }
-
-    function loadDashboardData() {
-      document.getElementById('global-discord-input').value = localStorage.getItem('kgff_discord_link') || "https://discord.gg/NZsbZq4C7";
-      document.getElementById('global-topup-input').value = localStorage.getItem('kgff_topup_link') || "https://codashop.com/";
-      renderCategories();
-    }
-
-    function saveDiscordLink() {
-      const val = document.getElementById('global-discord-input').value;
-      localStorage.setItem('kgff_discord_link', val);
-      syncToFirebase({ discord: val });
-      alert('Discord link saved & updated in Firebase!');
-    }
-
-    function saveTopupLink() {
-      const val = document.getElementById('global-topup-input').value;
-      localStorage.setItem('kgff_topup_link', val);
-      syncToFirebase({ topup: val });
-      alert('Top-Up link saved & updated in Firebase!');
-    }
-
-    function renderCategories() {
-      const defaultMeta = [
-        {id:'freefire-apk', title:'Free Fire APK', visible:true},
-        {id:'emulator', title:'Emulator', visible:true},
-        {id:'free-bypass', title:'Free Bypass', visible:true},
-        {id:'free-panel', title:'Free Panel', visible:true},
-        {id:'paid-mobile', title:'Paid Mobile Panels', visible:true},
-        {id:'paid-pc', title:'Paid PC Panels', visible:true}
-      ];
-      const categories = JSON.parse(localStorage.getItem('kgff_category_meta')) || defaultMeta;
-      const container = document.getElementById('category-visibility-list');
-      container.innerHTML = '';
-
-      categories.forEach((cat, idx) => {
-        container.innerHTML += `
-          <div class="switch-row">
-            <span>${cat.title}</span>
-            <button class="btn ${cat.visible ? '' : 'btn-secondary'}" onclick="toggleCategory(${idx})">
-              ${cat.visible ? 'VISIBLE (ON)' : 'HIDDEN (OFF)'}
+        <!-- Dynamic Category Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="font-size: 20px; color: var(--neon-purple);">Website Categories</h2>
+            <button class="add-new-btn" onclick="openAddModal()">
+                <i class="fas fa-plus"></i> Add New Box
             </button>
-          </div>
-        `;
-      });
-      localStorage.setItem('kgff_category_meta', JSON.stringify(categories));
-    }
+        </div>
 
-    function toggleCategory(index) {
-      const categories = JSON.parse(localStorage.getItem('kgff_category_meta'));
-      categories[index].visible = !categories[index].visible;
-      localStorage.setItem('kgff_category_meta', JSON.stringify(categories));
-      syncToFirebase({ categories });
-      renderCategories();
-    }
+        <!-- Dynamic Grid -->
+        <div class="grid" id="dynamic_grid">
+            <!-- Items will load here dynamically via Firebase -->
+        </div>
+    </div>
 
-    function syncToFirebase(payload) {
-      fetch(`${FIREBASE_URL}/settings.json`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(() => console.log('Successfully updated Firebase!'))
-      .catch(err => console.error('Firebase error:', err));
-    }
-  </script>
+    <!-- Add/Edit Category Box Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <h2 id="modal_title">Edit Category Box</h2>
+            <input type="hidden" id="edit_category_id">
+            
+            <div class="form-group">
+                <label>Category Title</label>
+                <input type="text" id="edit_title" placeholder="e.g. Paid PC Panel">
+            </div>
+
+            <div class="form-group">
+                <label>Manage Page Link <small style="color: #666;">(যে পেজে যাবে)</small></label>
+                <input type="text" id="edit_manage_link" placeholder="e.g. manage-new.html">
+            </div>
+
+            <div class="form-group">
+                <label>Icon Type</label>
+                <select id="edit_icon_type">
+                    <option value="icon">FontAwesome Icon Class (e.g. fas fa-desktop)</option>
+                    <option value="emoji">Direct Emoji / Text (যেমন: 💻, 🔥)</option>
+                    <option value="image">Image Logo URL</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label id="icon_val_label">Icon Class (e.g. fas fa-desktop)</label>
+                <input type="text" id="edit_icon_value" placeholder="fas fa-desktop">
+            </div>
+
+            <div class="modal-footer">
+                <button class="delete-btn" id="deleteCategoryBtn" style="display: none;">Delete</button>
+                <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+                <button class="save-btn" id="saveCategoryBtn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, get, set, update, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // ==========================================
+        // REPLACE WITH YOUR OWN FIREBASE CONFIG
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        // Glow mouse
+        const glow = document.getElementById('mouse-glow');
+        window.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+
+        // Auth Protection
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'login.html';
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            signOut(auth).then(() => window.location.href = 'login.html');
+        });
+
+        // Global Discord Settings
+        const discordInput = document.getElementById('discordInput');
+        const saveDiscordBtn = document.getElementById('saveDiscordBtn');
+        onValue(ref(db, 'global_settings/discord_link'), (snapshot) => {
+            if (snapshot.exists()) discordInput.value = snapshot.val();
+        });
+        saveDiscordBtn.addEventListener('click', () => {
+            const link = discordInput.value.trim();
+            if (!link) return alert('Please enter a valid Discord link!');
+            set(ref(db, 'global_settings/discord_link'), link)
+                .then(() => alert('Discord link updated globally!'))
+                .catch((e) => alert('Error: ' + e.message));
+        });
+
+        // Default Data Initialization
+        const defaultBoxes = {
+            free_panel: { title: "Free Panel", iconType: "icon", iconValue: "fas fa-laptop-code", manageLink: "manage-free-panel.html" },
+            free_bypass: { title: "Free Bypass", iconType: "icon", iconValue: "fas fa-shield-virus", manageLink: "manage-bypass.html" },
+            emulator: { title: "Emulator", iconType: "icon", iconValue: "fas fa-microchip", manageLink: "manage-emulator.html" },
+            pc_panel: { title: "Paid PC Panels", iconType: "icon", iconValue: "fas fa-desktop", manageLink: "manage-pc.html" },
+            mobile_panel: { title: "Paid Mobile Panels", iconType: "icon", iconValue: "fas fa-mobile-alt", manageLink: "manage-mobile.html" },
+            apk: { title: "Free Fire APK", iconType: "icon", iconValue: "fas fa-mobile", manageLink: "manage-apk.html" }
+        };
+
+        let visibilityState = {};
+        let categoriesData = {};
+
+        // Fetch Visibility State globally
+        onValue(ref(db, 'site_visibility'), (snapshot) => {
+            visibilityState = snapshot.val() || {};
+            renderGrid();
+        });
+
+        // Fetch Categories
+        onValue(ref(db, 'site_settings/categories'), (snapshot) => {
+            categoriesData = snapshot.val() || defaultBoxes;
+            renderGrid();
+        });
+
+        function renderGrid() {
+            const grid = document.getElementById('dynamic_grid');
+            grid.innerHTML = '';
+
+            for (const [key, data] of Object.entries(categoriesData)) {
+                const isVis = visibilityState[key] !== false; 
+                const visText = isVis ? 'ON' : 'OFF';
+                const visClass = isVis ? 'status-on' : 'status-off';
+                const checkedAttr = isVis ? 'checked' : '';
+                
+                const safeManageLink = data.manageLink || '#';
+
+                let iconHtml = '';
+                const val = data.iconValue || '';
+                
+                if (data.iconType === 'image' && val) {
+                    iconHtml = `<img src="${val}" alt="icon">`;
+                } else if (data.iconType === 'emoji' || (!val.includes('fa-') && !val.startsWith('http'))) {
+                    iconHtml = `<span style="font-size: 30px; display: inline-block; line-height: 1;">${val || '📦'}</span>`;
+                } else {
+                    iconHtml = `<i class="${val}"></i>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-icon">${iconHtml}</div>
+                    <h3 class="card-title">${data.title}</h3>
+                    <div class="btn-group">
+                        <a href="${safeManageLink}" class="btn btn-manage">Manage Items</a>
+                        <button class="btn btn-edit" onclick="openEditModal('${key}')">Edit Box</button>
+                    </div>
+                    <div class="visibility-control">
+                        <span>Visibility:</span>
+                        <label class="switch">
+                            <input type="checkbox" onchange="toggleVis('${key}', this.checked)" ${checkedAttr}>
+                            <span class="slider"></span>
+                        </label>
+                        <span class="status-label ${visClass}">${visText}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+        }
+
+        window.toggleVis = function(key, isChecked) {
+            set(ref(db, `site_visibility/${key}`), isChecked);
+        };
+
+        // Modal Controls
+        window.openAddModal = function() {
+            document.getElementById('modal_title').innerText = "Add New Category Box";
+            document.getElementById('edit_category_id').value = "NEW";
+            document.getElementById('edit_title').value = "";
+            document.getElementById('edit_manage_link').value = "";
+            document.getElementById('edit_icon_type').value = "icon";
+            document.getElementById('edit_icon_value').value = "";
+            
+            document.getElementById('deleteCategoryBtn').style.display = "none";
+            document.getElementById('editModal').style.display = 'flex';
+            updateIconLabel();
+        };
+
+        window.openEditModal = function(key) {
+            const data = categoriesData[key];
+            if (!data) return;
+
+            document.getElementById('modal_title').innerText = "Edit Category Box";
+            document.getElementById('edit_category_id').value = key;
+            document.getElementById('edit_title').value = data.title || "";
+            document.getElementById('edit_manage_link').value = data.manageLink || "";
+            document.getElementById('edit_icon_type').value = data.iconType || "icon";
+            document.getElementById('edit_icon_value').value = data.iconValue || "";
+            
+            document.getElementById('deleteCategoryBtn').style.display = "block";
+            document.getElementById('editModal').style.display = 'flex';
+            updateIconLabel();
+        };
+
+        window.closeModal = function() {
+            document.getElementById('editModal').style.display = 'none';
+        };
+
+        const typeSelect = document.getElementById('edit_icon_type');
+        const iconLabel = document.getElementById('icon_val_label');
+        function updateIconLabel() {
+            const val = typeSelect.value;
+            if (val === 'icon') iconLabel.innerText = 'Icon Class (e.g. fas fa-desktop)';
+            else if (val === 'emoji') iconLabel.innerText = 'Emoji or Text (e.g. 💻, 🔥)';
+            else iconLabel.innerText = 'Image Logo URL';
+        }
+        typeSelect.addEventListener('change', updateIconLabel);
+
+        // Save Button Handler
+        document.getElementById('saveCategoryBtn').addEventListener('click', () => {
+            const id = document.getElementById('edit_category_id').value;
+            let type = document.getElementById('edit_icon_type').value;
+            const val = document.getElementById('edit_icon_value').value.trim();
+
+            if (type === 'icon' && val && !val.includes('fa-') && !val.startsWith('http')) {
+                type = 'emoji';
+            }
+
+            const data = {
+                title: document.getElementById('edit_title').value,
+                manageLink: document.getElementById('edit_manage_link').value,
+                iconType: type,
+                iconValue: val
+            };
+
+            if (id === "NEW") {
+                const newRef = push(ref(db, 'site_settings/categories'));
+                set(newRef, data).then(() => closeModal());
+            } else {
+                update(ref(db, `site_settings/categories/${id}`), data).then(() => closeModal());
+            }
+        });
+
+        // Delete Button Handler
+        document.getElementById('deleteCategoryBtn').addEventListener('click', () => {
+            const id = document.getElementById('edit_category_id').value;
+            if (confirm("Are you sure you want to delete this box?")) {
+                remove(ref(db, `site_settings/categories/${id}`));
+                remove(ref(db, `site_visibility/${id}`)); 
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html>
