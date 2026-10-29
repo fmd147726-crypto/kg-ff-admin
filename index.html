@@ -3,84 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KG FF PANEL - HOME</title>
+    <title>Dashboard - KG FF Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="header">
-        <a href="index.html" class="brand">
-            <img src="logo.png" alt="Logo" class="site-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/888/888879.png'">
-            <div class="brand-text"><h2>KGFF PANEL</h2><p>PREMIUM CORP</p></div>
-        </a>
-        <div class="header-right">
-            <a href="https://discord.gg/ZBjSWaF7u" target="_blank" class="nav-btn dynamic-discord"><i class="fab fa-discord"></i> <span>Discord</span></a>
-        </div>
-    </header>
-
-    <div class="container" style="max-width: 1100px; margin: 40px auto; padding: 0 20px;">
-        <div style="margin-bottom: 30px;">
-            <h2 style="font-size: 26px; font-weight: 900; text-transform: uppercase; color: white;">SELECT CATEGORY</h2>
-            <p style="font-size: 11px; color: #777; letter-spacing: 2px; text-transform: uppercase;">CHOOSE A SECTION TO ACCESS TOOLS</p>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
-            <!-- Free Panel -->
-            <div style="background: #0b0512; border: 1px solid #1a0b2e; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; gap: 15px;">
-                <div style="color: #9d00ff; font-size: 24px;"><i class="fas fa-laptop"></i></div>
-                <h3 style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase;">Free Panel</h3>
-                <a href="free-panel.html" style="background: #6b4cff; color: white; padding: 10px 20px; border-radius: 6px; font-size: 12px; font-weight: bold; text-decoration: none; text-align: center;"><i class="fas fa-arrow-right"></i> Open Category</a>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <h2>KG FF</h2>
             </div>
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <div class="nav-category">Website Control</div>
+                <a href="https://fmd147726-crypto.github.io/kg-ff-panel/" target="_blank" class="nav-item"><i class="fas fa-external-link-alt"></i> Visit Site</a>
+                <div class="nav-category">Tools</div>
+                <a href="https://imgbb.com" target="_blank" class="nav-item"><i class="fas fa-image"></i> ImgBB</a>
+                <a href="https://postimages.org" target="_blank" class="nav-item"><i class="fas fa-images"></i> PostImages</a>
+                <div class="nav-category">Paid Panels</div>
+                <a href="manage-pc.html" class="nav-item"><i class="fas fa-desktop"></i> Manage PC Panel</a>
+                <a href="manage-mobile.html" class="nav-item"><i class="fas fa-mobile-alt"></i> Manage Mobile Panel</a>
+                <div class="nav-category">System</div>
+                <a href="manage-notifications.html" class="nav-item"><i class="fas fa-bell"></i> Notifications</a>
+                <a href="manage-admins.html" class="nav-item"><i class="fas fa-users-cog"></i> Admin Users</a>
+            </nav>
+        </aside>
 
-            <!-- Free Bypass -->
-            <div style="background: #0b0512; border: 1px solid #1a0b2e; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; gap: 15px;">
-                <div style="color: #ff0066; font-size: 24px;"><i class="fas fa-shield-alt"></i></div>
-                <h3 style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase;">Free Bypass</h3>
-                <a href="free-bypass.html" style="background: #ff0066; color: white; padding: 10px 20px; border-radius: 6px; font-size: 12px; font-weight: bold; text-decoration: none; text-align: center;"><i class="fas fa-arrow-right"></i> Open Category</a>
-            </div>
+        <main class="main-content">
+            <header class="top-header">
+                <h1>Dashboard Control Center</h1>
+            </header>
 
-            <!-- Emulator -->
-            <div style="background: #0b0512; border: 1px solid #1a0b2e; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; gap: 15px;">
-                <div style="color: #00cc66; font-size: 24px;"><i class="fas fa-desktop"></i></div>
-                <h3 style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase;">Emulator</h3>
-                <a href="emulator.html" style="background: #00cc66; color: black; padding: 10px 20px; border-radius: 6px; font-size: 12px; font-weight: bold; text-decoration: none; text-align: center;"><i class="fas fa-arrow-right"></i> Open Category</a>
-            </div>
+            <div class="dashboard-grid">
+                <!-- Free Panel -->
+                <div class="panel-card">
+                    <div class="card-icon" style="color: #9d00ff;"><i class="fas fa-laptop"></i></div>
+                    <h3>Free Panel</h3>
+                    <div class="card-actions">
+                        <a href="manage-free-panel.html" class="btn-manage">Manage Items</a>
+                        <a href="manage-free-panel.html" class="btn-edit">Edit Box</a>
+                    </div>
+                </div>
 
-            <!-- Paid PC Panels -->
-            <div style="background: #0b0512; border: 1px solid #1a0b2e; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; gap: 15px;">
-                <div style="color: #ffaa00; font-size: 24px;"><i class="fas fa-microchip"></i></div>
-                <h3 style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase;">Paid PC Panels</h3>
-                <a href="pc-paid-panel.html" style="background: #ffaa00; color: black; padding: 10px 20px; border-radius: 6px; font-size: 12px; font-weight: bold; text-decoration: none; text-align: center;"><i class="fas fa-arrow-right"></i> Open Category</a>
-            </div>
+                <!-- Free Bypass -->
+                <div class="panel-card">
+                    <div class="card-icon" style="color: #ff0066;"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Free Bypass</h3>
+                    <div class="card-actions">
+                        <a href="manage-bypass.html" class="btn-manage">Manage Items</a>
+                        <a href="manage-bypass.html" class="btn-edit">Edit Box</a>
+                    </div>
+                </div>
 
-            <!-- Paid Mobile Panels -->
-            <div style="background: #0b0512; border: 1px solid #1a0b2e; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; gap: 15px;">
-                <div style="color: #ff0066; font-size: 24px;"><img src="https://api.iconify.design/lucide:smartphone.svg?color=%23ff0066" width="24" height="24" style="vertical-align: middle;"></div>
-                <h3 style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase;">Paid Mobile Panels</h3>
-                <a href="paid-mobile-panel.html" style="background: #ff0066; color: white; padding: 10px 20px; border-radius: 6px; font-size: 12px; font-weight: bold; text-decoration: none; text-align: center;"><i class="fas fa-arrow-right"></i> Open Category</a>
-            </div>
+                <!-- Emulator -->
+                <div class="panel-card">
+                    <div class="card-icon" style="color: #00cc66;"><i class="fas fa-desktop"></i></div>
+                    <h3>Emulator</h3>
+                    <div class="card-actions">
+                        <a href="manage-emulator.html" class="btn-manage">Manage Items</a>
+                        <a href="manage-emulator.html" class="btn-edit">Edit Box</a>
+                    </div>
+                </div>
 
-            <!-- Free Fire APK -->
-            <div style="background: #0b0512; border: 1px solid #1a0b2e; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; gap: 15px;">
-                <div style="color: #00cc66; font-size: 24px;"><i class="fas fa-bolt"></i></div>
-                <h3 style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase;">Free Fire APK</h3>
-                <a href="free-fire-apk.html" style="background: #00cc66; color: black; padding: 10px 20px; border-radius: 6px; font-size: 12px; font-weight: bold; text-decoration: none; text-align: center;"><i class="fas fa-arrow-right"></i> Open Category</a>
+                <!-- Paid PC Panels -->
+                <div class="panel-card">
+                    <div class="card-icon" style="color: #ffaa00;"><i class="fas fa-microchip"></i></div>
+                    <h3>Paid PC Panels</h3>
+                    <div class="card-actions">
+                        <a href="manage-pc.html" class="btn-manage">Manage Items</a>
+                        <a href="manage-pc.html" class="btn-edit">Edit Box</a>
+                    </div>
+                </div>
+
+                <!-- Paid Mobile Panels -->
+                <div class="panel-card">
+                    <div class="card-icon" style="color: #ff0066;"><i class="fas fa-mobile-alt"></i></div>
+                    <h3>Paid Mobile Panels</h3>
+                    <div class="card-actions">
+                        <a href="manage-mobile.html" class="btn-manage">Manage Items</a>
+                        <a href="manage-mobile.html" class="btn-edit">Edit Box</a>
+                    </div>
+                </div>
+
+                <!-- Free Fire APK -->
+                <div class="panel-card">
+                    <div class="card-icon" style="color: #00cc66;"><i class="fas fa-bolt"></i></div>
+                    <h3>Free Fire APK</h3>
+                    <div class="card-actions">
+                        <a href="manage-apk.html" class="btn-manage">Manage Items</a>
+                        <a href="manage-apk.html" class="btn-edit">Edit Box</a>
+                    </div>
+                </div>
             </div>
-        </div>
+        </main>
     </div>
-
-    <footer style="margin-top: 50px; padding: 30px; text-align: center; font-size: 11px; color: #777; border-top: 1px solid #1a0b2e;">
-        <p>© 2026 KG FF PANEL. All rights reserved.</p>
-    </footer>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-        import { firebaseConfig } from "./firebase-config.js";
-        const db = getDatabase(initializeApp(firebaseConfig));
-        onValue(ref(db, 'global_settings/discord_link'), snapshot => {
-            if (snapshot.exists()) document.querySelectorAll('.dynamic-discord').forEach(btn => btn.href = snapshot.val());
-        });
-    </script>
 </body>
 </html>
