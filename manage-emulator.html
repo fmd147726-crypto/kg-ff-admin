@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">\n    <meta name="description" content="KG FF PANEL admin dashboard and management tools">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KG FF PANEL | Admin - Manage Emulator</title>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #05020a; color: #fff; padding: 30px 5%; }
+
+        /* Header Area */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #1a0b2e; }
+        .header h2 { font-size: 22px; color: #fff; }
+        .btn-back { background: #11071a; color: #ccc; padding: 8px 16px; border-radius: 6px; text-decoration: none; border: 1px solid #2a113d; font-size: 13px; transition: 0.3s; }
+        .btn-back:hover { background: #1a0b2b; color: #fff; border-color: #9d00ff; }
+
+        /* Grid Layout */
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        @media (max-width: 900px) { .admin-grid { grid-template-columns: 1fr; } }
+
+        /* Card Style */
+        .card { background: #11071a; border: 1px solid #2a113d; border-radius: 12px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card-title { font-size: 16px; font-weight: 700; color: #ff0066; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 10px; }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 15px; }
+        label { font-size: 12px; color: #aaa; margin-bottom: 6px; display: block; font-weight: 500; }
+        input[type="text"] { width: 100%; background: #080410; border: 1px solid #2a113d; padding: 12px; border-radius: 6px; color: #fff; font-size: 13px; outline: none; transition: 0.3s; }
+        input[type="text"]:focus { border-color: #9d00ff; }
+
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; background: #080410; padding: 12px; border-radius: 6px; border: 1px solid #2a113d; margin-bottom: 15px; }
+        .toggle-row span { font-size: 13px; color: #eee; }
+
+        /* Switch Style */
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #333; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #00cc66; }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .btn-save { background: linear-gradient(135deg, #9d00ff 0%, #ff0066 100%); color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%; font-size: 14px; transition: 0.3s; }
+        .btn-save:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        /* Items List */
+        .items-list { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .item-row { background: #080410; border: 1px solid #2a113d; padding: 12px 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .item-info { display: flex; flex-direction: column; gap: 2px; }
+        .item-info strong { font-size: 13px; color: #fff; }
+        .item-info small { font-size: 11px; color: #666; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        .btn-delete { background: rgba(255, 0, 85, 0.1); color: #ff0055; border: 1px solid rgba(255, 0, 85, 0.3); padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; transition: 0.3s; }
+        .btn-delete:hover { background: #ff0055; color: #fff; }
+
+        .loading-text { text-align: center; color: #444; padding: 20px; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>Manage Emulator</h2>
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Dashboard</a>
+    </div>
+
+    <div class="admin-grid">
+        
+        <!-- Left: Page Settings Card -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-cog"></i> Page & Video Settings</div>
+            
+            <div class="form-group">
+                <label>YouTube / Drive Video URL</label>
+                <input type="text" id="videoUrl" placeholder="https://youtube.com/watch?v=...">
+            </div>
+
+            <div class="toggle-row">
+                <span>Display Video Section</span>
+                <label class="switch">
+                    <input type="checkbox" id="videoToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>How to Skip Link (Neon Green Button)</label>
+                <input type="text" id="skipUrl" placeholder="https://youtube.com/watch?v=tutorial">
+            </div>
+
+            <div class="toggle-row">
+                <span>Display 'How to Skip' Button</span>
+                <label class="switch">
+                    <input type="checkbox" id="skipToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>RAR Password</label>
+                <input type="text" id="rarPass" value="1">
+            </div>
+
+            <button class="btn-save" onclick="savePageSettings()"><i class="fas fa-save"></i> Save Page Settings</button>
+        </div>
+
+        <!-- Right: Emulator Items CRUD -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-desktop"></i> Add Emulator Download Item</div>
+            
+            <div class="form-group">
+                <label>Emulator Title</label>
+                <input type="text" id="itemTitle" placeholder="e.g. BlueStacks 5 Tweaked">
+            </div>
+
+            <div class="form-group">
+                <label>Download Link</label>
+                <input type="text" id="itemLink" placeholder="Mediafire/Drive Link">
+            </div>
+
+            <button class="btn-save" onclick="addItem()"><i class="fas fa-plus"></i> Add New Link</button>
+
+            <div class="card-title" style="margin-top: 30px; color: #aaa;"><i class="fas fa-list"></i> Current Links</div>
+            <div id="itemList" class="items-list">
+                <div class="loading-text">Loading items...</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+  apiKey: "AIzaSyCp4Kc-rt3umBsiBXyIIqVgge6CcxOxEsw",
+  authDomain: "kg-ff-panel.firebaseapp.com",
+  databaseURL: "https://kg-ff-panel-default-rtdb.firebaseio.com",
+  projectId: "kg-ff-panel",
+  storageBucket: "kg-ff-panel.firebasestorage.app",
+  messagingSenderId: "28109210766",
+  appId: "1:28109210766:web:18ddc0e885d442f301f5df",
+  measurementId: "G-7GYDLY2H30"
+};
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // 1. Load Settings on Page Load
+        db.ref('page_settings/emulator').on('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            document.getElementById('videoUrl').value = data.video_url || '';
+            document.getElementById('videoToggle').checked = data.video_enabled !== false;
+            document.getElementById('skipUrl').value = data.how_to_skip || '';
+            document.getElementById('skipToggle').checked = data.skip_enabled !== false;
+            document.getElementById('rarPass').value = data.rar_password || '1';
+        });
+
+        // 2. Save Page Settings
+        function savePageSettings() {
+            const settings = {
+                video_url: document.getElementById('videoUrl').value.trim(),
+                video_enabled: document.getElementById('videoToggle').checked,
+                how_to_skip: document.getElementById('skipUrl').value.trim(),
+                skip_enabled: document.getElementById('skipToggle').checked,
+                rar_password: document.getElementById('rarPass').value.trim()
+            };
+
+            db.ref('page_settings/emulator').set(settings).then(() => {
+                // Compatibility for alternate naming
+                db.ref('page_settings/emulators').set(settings);
+                alert('Emulator Settings Saved Successfully!');
+            }).catch(e => alert('Error: ' + e.message));
+        }
+
+        // 3. Add New Emulator Item
+        function addItem() {
+            const title = document.getElementById('itemTitle').value.trim();
+            const link = document.getElementById('itemLink').value.trim();
+
+            if (!title || !link) return alert('Enter Title and Link');
+
+            db.ref('emulators').push({
+                title: title,
+                download: link,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            }).then(() => {
+                document.getElementById('itemTitle').value = '';
+                document.getElementById('itemLink').value = '';
+            });
+        }
+
+        // 4. Load & Show Existing Items
+        db.ref('emulators').on('value', (snapshot) => {
+            const list = document.getElementById('itemList');
+            list.innerHTML = '';
+
+            if (!snapshot.exists()) {
+                list.innerHTML = '<div class="loading-text">No Emulator Links Found.</div>';
+                return;
+            }
+
+            snapshot.forEach((child) => {
+                const item = child.val();
+                const key = child.key;
+                const row = document.createElement('div');
+                row.className = 'item-row';
+                row.innerHTML = `
+                    <div class="item-info">
+                        <strong>${item.title}</strong>
+                        <small>${item.download}</small>
+                    </div>
+                    <button class="btn-delete" onclick="deleteItem('${key}')">Delete</button>
+                `;
+                list.appendChild(row);
+            });
+        });
+
+        // 5. Delete Item
+        function deleteItem(key) {
+            if (confirm('Delete this Emulator link?')) {
+                db.ref(`emulators/${key}`).remove();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">\n    <meta name="description" content="KG FF PANEL admin dashboard and management tools">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KG FF PANEL | Admin - Manage Free Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #05020a; color: #fff; padding: 30px 5%; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .btn-back { background: #11071a; color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; border: 1px solid #2a113d; font-size: 13px; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media(max-width:850px){ .grid { grid-template-columns: 1fr; } }
+
+        .card { background: #11071a; border: 1px solid #2a113d; border-radius: 12px; padding: 20px; }
+        .card-title { font-size: 16px; font-weight: 700; color: #ff0066; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+
+        .form-group { margin-bottom: 15px; }
+        label { font-size: 12px; color: #aaa; margin-bottom: 6px; display: block; }
+        input[type="text"] { width: 100%; background: #080410; border: 1px solid #2a113d; padding: 10px; border-radius: 6px; color: #fff; font-size: 13px; }
+        
+        .toggle-group { display: flex; align-items: center; justify-content: space-between; background: #080410; padding: 10px 12px; border-radius: 6px; border: 1px solid #2a113d; margin-bottom: 15px; }
+        .toggle-group label { margin: 0; }
+
+        .btn-save { background: linear-gradient(135deg, #9d00ff, #ff0066); color: #fff; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%; font-size: 13px; }
+        
+        .item-list { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; background: #080410; padding: 10px 15px; border-radius: 6px; border: 1px solid #2a113d; }
+        .btn-del { background: #ff0055; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>Manage Free Panel</h2>
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Dashboard</a>
+    </div>
+
+    <div class="grid">
+        <!-- Page Settings Card -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-cog"></i> Page & Video Settings</div>
+            
+            <div class="form-group">
+                <label>YouTube / Drive Video URL</label>
+                <input type="text" id="videoUrl" placeholder="https://youtube.com/watch?v=...">
+            </div>
+
+            <div class="toggle-group">
+                <label>Enable Video</label>
+                <input type="checkbox" id="videoToggle" checked>
+            </div>
+
+            <div class="form-group">
+                <label>How to Skip Link</label>
+                <input type="text" id="skipUrl" placeholder="https://youtube.com/watch?v=howtoskip">
+            </div>
+
+            <div class="toggle-group">
+                <label>Enable How to Skip Button</label>
+                <input type="checkbox" id="skipToggle" checked>
+            </div>
+
+            <div class="form-group">
+                <label>RAR Password</label>
+                <input type="text" id="rarPass" value="1">
+            </div>
+
+            <button class="btn-save" onclick="savePageSettings()"><i class="fas fa-save"></i> Save Settings</button>
+        </div>
+
+        <!-- Add Free Panel Items Card -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-plus-circle"></i> Add Free Panel Link</div>
+            
+            <div class="form-group">
+                <label>Panel Title</label>
+                <input type="text" id="itemTitle" placeholder="e.g. Free Panel OB55 V1">
+            </div>
+
+            <div class="form-group">
+                <label>Download Link</label>
+                <input type="text" id="itemDownload" placeholder="https://mediafire.com/...">
+            </div>
+
+            <button class="btn-save" onclick="addItem()"><i class="fas fa-plus"></i> Add Item</button>
+
+            <div class="item-list" id="itemList"></div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+  apiKey: "AIzaSyCp4Kc-rt3umBsiBXyIIqVgge6CcxOxEsw",
+  authDomain: "kg-ff-panel.firebaseapp.com",
+  databaseURL: "https://kg-ff-panel-default-rtdb.firebaseio.com",
+  projectId: "kg-ff-panel",
+  storageBucket: "kg-ff-panel.firebasestorage.app",
+  messagingSenderId: "28109210766",
+  appId: "1:28109210766:web:18ddc0e885d442f301f5df",
+  measurementId: "G-7GYDLY2H30"
+};
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Load Settings
+        db.ref('page_settings/free_panel').on('value', s => {
+            const data = s.val() || {};
+            document.getElementById('videoUrl').value = data.video_url || '';
+            document.getElementById('videoToggle').checked = data.video_enabled !== false;
+            document.getElementById('skipUrl').value = data.how_to_skip || '';
+            document.getElementById('skipToggle').checked = data.skip_enabled !== false;
+            document.getElementById('rarPass').value = data.rar_password || '1';
+        });
+
+        // Save Settings
+        function savePageSettings() {
+            const obj = {
+                video_url: document.getElementById('videoUrl').value.trim(),
+                video_enabled: document.getElementById('videoToggle').checked,
+                how_to_skip: document.getElementById('skipUrl').value.trim(),
+                skip_enabled: document.getElementById('skipToggle').checked,
+                rar_password: document.getElementById('rarPass').value.trim()
+            };
+
+            db.ref('page_settings/free_panel').set(obj).then(() => {
+                db.ref('page_settings/free-panel').set(obj);
+                alert('Page Settings Saved Successfully!');
+            });
+        }
+
+        // Add Item
+        function addItem() {
+            const title = document.getElementById('itemTitle').value.trim();
+            const download = document.getElementById('itemDownload').value.trim();
+            if (!title || !download) return alert('Enter Title and Download Link');
+
+            db.ref('free_panels').push({
+                title: title,
+                download: download,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            }).then(() => {
+                document.getElementById('itemTitle').value = '';
+                document.getElementById('itemDownload').value = '';
+            });
+        }
+
+        // Load Items
+        db.ref('free_panels').on('value', s => {
+            const list = document.getElementById('itemList');
+            list.innerHTML = '';
+            s.forEach(c => {
+                const item = c.val();
+                list.innerHTML += `
+                    <div class="item-row">
+                        <span>${item.title}</span>
+                        <button class="btn-del" onclick="db.ref('free_panels/${c.key}').remove()">Delete</button>
+                    </div>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>
