@@ -37,7 +37,6 @@
             <h2 style="font-size: 18px; font-weight: 800;">MANAGE FREE BYPASS</h2>
         </div>
 
-        <!-- Page Settings Form -->
         <div class="section-box">
             <div class="section-title"><i class="fas fa-cog"></i> Page Settings</div>
             <div class="form-group">
@@ -55,12 +54,11 @@
             <button class="btn-submit" onclick="saveSettings()">Save Settings</button>
         </div>
 
-        <!-- Add Product Form -->
         <div class="section-box">
             <div class="section-title"><i class="fas fa-plus-circle"></i> Add New Bypass Item</div>
             <div class="form-group">
                 <label>Title / Item Name</label>
-                <input type="text" id="itemTitle" class="form-input" placeholder="e.g. Free Bypass OB55">
+                <input type="text" id="itemTitle" class="form-input" placeholder="e.g. Free Bypass Tool">
             </div>
             <div class="form-group">
                 <label>Download Link</label>
@@ -69,7 +67,6 @@
             <button class="btn-submit" onclick="addItem()">Add Bypass Item</button>
         </div>
 
-        <!-- Existing Items List -->
         <div class="section-box">
             <div class="section-title"><i class="fas fa-list"></i> Existing Items</div>
             <div class="grid" id="itemsList">
@@ -83,10 +80,8 @@
         import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { firebaseConfig } from "./firebase-config.js";
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        const db = getDatabase(initializeApp(firebaseConfig));
 
-        // Load existing settings
         onValue(ref(db, "settings/free_bypass"), snapshot => {
             const data = snapshot.val() || {};
             document.getElementById('videoUrl').value = data.video_url || '';
@@ -94,70 +89,42 @@
             document.getElementById('rarPassword').value = data.rar_password || '';
         });
 
-        // Save settings to Firebase
         window.saveSettings = function() {
-            const settings = {
+            set(ref(db, "settings/free_bypass"), {
                 video_url: document.getElementById('videoUrl').value.trim(),
                 how_to_skip: document.getElementById('skipUrl').value.trim(),
                 rar_password: document.getElementById('rarPassword').value.trim()
-            };
-            set(ref(db, "settings/free_bypass"), settings)
-                .then(() => alert("Settings saved successfully!"))
-                .catch(err => alert("Error saving settings: " + err.message));
+            }).then(() => alert("Settings saved successfully!"));
         };
 
-        // Add new bypass item to Firebase
         window.addItem = function() {
             const title = document.getElementById('itemTitle').value.trim();
             const download = document.getElementById('itemDownload').value.trim();
+            if (!title || !download) return alert("Please fill in both title and download link!");
 
-            if (!title || !download) {
-                alert("Please fill in both title and download link!");
-                return;
-            }
-
-            const newItemRef = push(ref(db, "free_bypass"));
-            set(newItemRef, {
-                title: title,
-                download: download,
-                timestamp: Date.now()
-            }).then(() => {
+            set(push(ref(db, "free_bypass")), { title, download }).then(() => {
                 alert("Item added successfully!");
                 document.getElementById('itemTitle').value = '';
                 document.getElementById('itemDownload').value = '';
-            }).catch(err => alert("Error adding item: " + err.message));
+            });
         };
 
-        // Render items live from Firebase
         onValue(ref(db, "free_bypass"), snapshot => {
             const list = document.getElementById('itemsList');
             list.innerHTML = '';
-
             if (!snapshot.exists()) {
                 list.innerHTML = '<p style="color: #aaa; font-size: 13px;">No items added yet.</p>';
                 return;
             }
-
             snapshot.forEach(child => {
-                const key = child.key;
-                const item = child.val();
                 list.innerHTML += `
                     <div class="item-card">
-                        <div>
-                            <div style="font-weight: bold; font-size: 14px;">${item.title || 'Bypass Item'}</div>
-                        </div>
-                        <button class="btn-delete" onclick="deleteItem('${key}')"><i class="fas fa-trash"></i></button>
+                        <div style="font-weight: bold; font-size: 14px;">${child.val().title}</div>
+                        <button class="btn-delete" onclick="remove(ref(db, 'free_bypass/${child.key}'))"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
             });
         });
-
-        // Delete item from Firebase
-        window.deleteItem = function(key) {
-            if (confirm("Are you sure you want to delete this item?")) {
-                remove(ref(db, `free_bypass/${key}`));
-            }
-        };
     </script>
 </body>
 </html>
