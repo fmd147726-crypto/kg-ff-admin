@@ -577,6 +577,12 @@
                 
                 const safeManageLink = data.manageLink || '#';
 
+                // Forced link protection to ensure correct local routing
+                let finalManageLink = safeManageLink;
+                if (key === 'apk') finalManageLink = 'manage-apk.html';
+                if (key === 'free_bypass') finalManageLink = 'manage-bypass.html';
+                if (key === 'emulator') finalManageLink = 'manage-emulator.html';
+
                 let iconHtml = '';
                 const val = data.iconValue || '';
                 
@@ -595,7 +601,7 @@
                     <div class="card-icon">${iconHtml}</div>
                     <h3 class="card-title">${data.title}</h3>
                     <div class="btn-group">
-                        <a href="${safeManageLink}" class="btn btn-manage">Manage Items</a>
+                        <a href="${finalManageLink}" class="btn btn-manage">Manage Items</a>
                         <button class="btn btn-edit" onclick="openEditModal('${key}')">Edit Box</button>
                     </div>
                     <div class="visibility-control">
