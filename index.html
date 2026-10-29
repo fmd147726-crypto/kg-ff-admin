@@ -575,16 +575,17 @@
                 const visClass = isVis ? 'status-on' : 'status-off';
                 const checkedAttr = isVis ? 'checked' : '';
                 
-                const safeManageLink = data.manageLink || '#';
-
-                // Forced link protection for all 6 core items
-                let finalManageLink = safeManageLink;
+                // Forced link protection to override old database image links
+                let finalManageLink = '#';
                 if (key === 'free_panel') finalManageLink = 'manage-free-panel.html';
-                if (key === 'free_bypass') finalManageLink = 'manage-bypass.html';
-                if (key === 'emulator') finalManageLink = 'manage-emulator.html';
-                if (key === 'pc_panel') finalManageLink = 'manage-pc.html';
-                if (key === 'mobile_panel') finalManageLink = 'manage-mobile.html';
-                if (key === 'apk') finalManageLink = 'manage-apk.html';
+                else if (key === 'free_bypass') finalManageLink = 'manage-bypass.html';
+                else if (key === 'emulator') finalManageLink = 'manage-emulator.html';
+                else if (key === 'apk') finalManageLink = 'manage-apk.html';
+                else if (key === 'pc_panel') finalManageLink = 'manage-pc.html';
+                else if (key === 'mobile_panel') finalManageLink = 'manage-mobile.html';
+                else {
+                    finalManageLink = data.manageLink || '#';
+                }
 
                 let iconHtml = '';
                 const val = data.iconValue || '';
