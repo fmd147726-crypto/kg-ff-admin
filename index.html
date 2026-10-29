@@ -577,11 +577,14 @@
                 
                 const safeManageLink = data.manageLink || '#';
 
-                // Forced link protection to ensure correct local routing
+                // Forced link protection for all 6 core items
                 let finalManageLink = safeManageLink;
-                if (key === 'apk') finalManageLink = 'manage-apk.html';
+                if (key === 'free_panel') finalManageLink = 'manage-free-panel.html';
                 if (key === 'free_bypass') finalManageLink = 'manage-bypass.html';
                 if (key === 'emulator') finalManageLink = 'manage-emulator.html';
+                if (key === 'pc_panel') finalManageLink = 'manage-pc.html';
+                if (key === 'mobile_panel') finalManageLink = 'manage-mobile.html';
+                if (key === 'apk') finalManageLink = 'manage-apk.html';
 
                 let iconHtml = '';
                 const val = data.iconValue || '';
