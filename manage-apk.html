@@ -1,361 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Free Fire APK</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-  <style>
-    :root { --bg: #05020a; --card: #11071a; --border: #2a113d; --pink: #ff0066; --purple: #9d00ff; --text: #e2e8f0; --muted: #94a3b8; --green: #10b981; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 40px 20px; min-height: 100vh; }
-    
-    .header { max-width: 800px; margin: 0 auto 30px; display: flex; align-items: center; gap: 15px; }
-    .back-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-    .back-btn:hover { background: rgba(157,0,255,0.2); border-color: var(--purple); }
-    h2 { font-size: 22px; display: flex; align-items: center; gap: 10px; }
-    
-    .card { max-width: 800px; margin: 0 auto 25px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
-    .card-title { font-size: 14px; font-weight: 800; color: var(--purple); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
-    
-    .form-group { margin-bottom: 18px; }
-    .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
-    
-    input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: #fff; padding: 13px 14px; border-radius: 10px; outline: none; font-size: 14px; transition: 0.3s; }
-    input:focus { border-color: var(--purple); box-shadow: 0 0 10px rgba(157, 0, 255, 0.25); }
-    
-    .btn-save { width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink)); color: #fff; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; transition: 0.3s; }
-    .btn-save:hover { opacity: 0.92; transform: translateY(-2px); }
-    .btn-save:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
-    
-    .btn-add { background: linear-gradient(135deg, #00cc66, #00a854); }
-    
-    /* Toggle */
-    .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #374151; transition: .4s; border-radius: 20px; }
-    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-    input:checked + .slider { background-color: var(--green); }
-    input:checked + .slider:before { transform: translateX(20px); }
-
-    /* Items List */
-    .item-list { display: flex; flex-direction: column; gap: 12px; }
-    .item-row {
-      background: rgba(0,0,0,0.25);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      transition: 0.3s;
-    }
-    .item-row:hover { border-color: var(--purple); }
-    .item-info { flex: 1; min-width: 0; }
-    .item-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #fff; }
-    .item-link { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 380px; }
-    .item-actions { display: flex; gap: 8px; flex-shrink: 0; }
-    .btn-sm {
-      border: none; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 700;
-      cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.2s;
-    }
-    .btn-edit { background: rgba(157,0,255,0.15); color: var(--purple); border: 1px solid var(--purple); }
-    .btn-edit:hover { background: var(--purple); color: #fff; }
-    .btn-del { background: rgba(255,0,102,0.1); color: var(--pink); border: 1px solid var(--pink); }
-    .btn-del:hover { background: var(--pink); color: #fff; }
-
-    .empty-state { text-align: center; padding: 30px; color: var(--muted); font-size: 14px; border: 1px dashed var(--border); border-radius: 12px; }
-
-    /* Edit Modal */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center;
-    }
-    .modal {
-      background: var(--card); border: 2px solid var(--purple); border-radius: 16px;
-      width: 90%; max-width: 480px; padding: 28px; box-shadow: 0 0 40px rgba(157,0,255,0.3);
-    }
-    .modal h3 { color: var(--pink); margin-bottom: 20px; font-size: 18px; }
-    .modal-actions { display: flex; gap: 10px; margin-top: 10px; }
-    .btn-cancel { flex: 1; background: transparent; border: 1px solid var(--muted); color: var(--muted); padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 700; }
-    .btn-update { flex: 1; background: var(--purple); border: none; color: #fff; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 700; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manage Free Fire APK</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #07030b; --card-bg: #0f0a1d; --border-purple: #1f1a2e;
+            --neon-purple: #a855f7; --neon-pink: #ff007f; --neon-green: #00ff7f;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--bg-dark); color: white; min-height: 100vh; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .btn-back { background: #1a0b2b; color: white; text-decoration: none; padding: 8px 18px; border-radius: 6px; border: 1px solid var(--border-purple); font-weight: bold; font-size: 13px; }
+        .section-box { background: var(--card-bg); border: 1px solid var(--border-purple); border-radius: 12px; padding: 20px; margin-bottom: 25px; }
+        .section-title { font-size: 16px; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; color: var(--neon-purple); display: flex; align-items: center; gap: 8px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 12px; font-weight: bold; color: #aaa; margin-bottom: 6px; text-transform: uppercase; }
+        .form-input { width: 100%; background: #07030b; border: 1px solid var(--border-purple); color: white; padding: 10px 14px; border-radius: 8px; outline: none; font-size: 14px; }
+        .btn-submit { background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink)); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
+        .item-card { background: #07030b; border: 1px solid var(--border-purple); border-radius: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-delete { background: rgba(255, 0, 127, 0.15); border: 1px solid var(--neon-pink); color: var(--neon-pink); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
+    </style>
 </head>
 <body>
-
-  <div class="header">
-    <a href="index.html" class="back-btn"><i class='bx bx-arrow-back'></i></a>
-    <h2><i class='bx bxl-android'></i> MANAGE FREE FIRE APK</h2>
-  </div>
-
-  <!-- ========== PAGE SETTINGS ========== -->
-  <div class="card">
-    <div class="card-title"><i class='bx bx-cog'></i> Page Settings (Video & Skip)</div>
-    <form id="settingsForm">
-      <div class="form-group">
-        <div class="label-row">
-          <label><i class='bx bxl-youtube'></i> YouTube / Drive Video URL</label>
-          <label class="switch"><input type="checkbox" id="videoToggle" checked><span class="slider"></span></label>
+    <div class="container">
+        <div class="top-bar">
+            <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> BACK</a>
+            <h2 style="font-size: 18px; font-weight: 800;">MANAGE FREE FIRE APK</h2>
         </div>
-        <input type="text" id="videoInput" placeholder="https://www.youtube.com/watch?v=... or Drive link">
-      </div>
 
-      <div class="form-group">
-        <div class="label-row">
-          <label><i class='bx bx-skip-next-circle'></i> How To Skip Link</label>
-          <label class="switch"><input type="checkbox" id="skipToggle" checked><span class="slider"></span></label>
+        <div class="section-box">
+            <div class="section-title"><i class="fas fa-cog"></i> Page Settings</div>
+            <div class="form-group">
+                <label>Video URL</label>
+                <input type="text" id="videoUrl" class="form-input" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+            <div class="form-group">
+                <label>How To Skip Link</label>
+                <input type="text" id="skipUrl" class="form-input" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label>RAR Password</label>
+                <input type="text" id="rarPassword" class="form-input" placeholder="1234">
+            </div>
+            <button class="btn-submit" onclick="saveSettings()">Save Settings</button>
         </div>
-        <input type="text" id="skipInput" placeholder="Optional: https://your-skip-link.com">
-      </div>
 
-      <button type="submit" class="btn-save" id="btnSaveSettings"><i class='bx bx-save'></i> Save Page Settings</button>
-    </form>
-  </div>
+        <div class="section-box">
+            <div class="section-title"><i class="fas fa-plus-circle"></i> Add APK Item</div>
+            <div class="form-group">
+                <label>APK Title</label>
+                <input type="text" id="itemTitle" class="form-input" placeholder="e.g. Free Fire APK">
+            </div>
+            <div class="form-group">
+                <label>Download Link</label>
+                <input type="text" id="itemDownload" class="form-input" placeholder="https://...">
+            </div>
+            <button class="btn-submit" onclick="addItem()">Add Item</button>
+        </div>
 
-  <!-- ========== ADD NEW APK ========== -->
-  <div class="card">
-    <div class="card-title"><i class='bx bx-plus-circle'></i> Add New APK</div>
-    <form id="addForm">
-      <div class="form-group">
-        <div class="label-row"><label><i class='bx bx-rename'></i> APK Title</label></div>
-        <input type="text" id="newTitle" placeholder="FREE FIRE NORMAL OB55" required>
-      </div>
-      <div class="form-group">
-        <div class="label-row"><label><i class='bx bx-download'></i> Download Link</label></div>
-        <input type="text" id="newLink" placeholder="https://mediafire.com/..." required>
-      </div>
-      <button type="submit" class="btn-save btn-add" id="btnAdd"><i class='bx bx-plus'></i> Add APK</button>
-    </form>
-  </div>
-
-  <!-- ========== APK LIST ========== -->
-  <div class="card">
-    <div class="card-title"><i class='bx bx-list-ul'></i> All APK Items</div>
-    <div class="item-list" id="apkList">
-      <div class="empty-state"><i class='bx bx-loader-alt bx-spin'></i> Loading...</div>
+        <div class="section-box">
+            <div class="section-title"><i class="fas fa-list"></i> Existing Items</div>
+            <div class="grid" id="itemsList">
+                <p style="color: #aaa; font-size: 13px;">Loading items...</p>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- ========== EDIT MODAL ========== -->
-  <div class="modal-overlay" id="editModal">
-    <div class="modal">
-      <h3><i class='bx bx-edit'></i> Edit APK</h3>
-      <input type="hidden" id="editId">
-      <div class="form-group">
-        <div class="label-row"><label>APK Title</label></div>
-        <input type="text" id="editTitle">
-      </div>
-      <div class="form-group">
-        <div class="label-row"><label>Download Link</label></div>
-        <input type="text" id="editLink">
-      </div>
-      <div class="modal-actions">
-        <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
-        <button class="btn-update" id="btnUpdate">Update</button>
-      </div>
-    </div>
-  </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { firebaseConfig } from "./firebase-config.js";
 
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-  apiKey: "AIzaSyCp4Kc-rt3umBsiBXyIIqVgge6CcxOxEsw",
-  authDomain: "kg-ff-panel.firebaseapp.com",
-  databaseURL: "https://kg-ff-panel-default-rtdb.firebaseio.com",
-  projectId: "kg-ff-panel",
-  storageBucket: "kg-ff-panel.firebasestorage.app",
-  messagingSenderId: "28109210766",
-  appId: "1:28109210766:web:18ddc0e885d442f301f5df",
-  measurementId: "G-7GYDLY2H30"
-};
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+        const db = getDatabase(initializeApp(firebaseConfig));
 
-    // ========== PAGE SETTINGS ==========
-    const videoInput = document.getElementById('videoInput');
-    const videoToggle = document.getElementById('videoToggle');
-    const skipInput = document.getElementById('skipInput');
-    const skipToggle = document.getElementById('skipToggle');
-    const btnSaveSettings = document.getElementById('btnSaveSettings');
-
-    // Load settings (support both old ff_apk_page and new page_settings/apk)
-    function loadSettings() {
-      db.ref('ff_apk_page').once('value').then(snap => {
-        const d = snap.val() || {};
-        videoInput.value = d.video_url || '';
-        videoToggle.checked = d.video_enabled !== false;
-        skipInput.value = d.how_to_skip || '';
-        skipToggle.checked = d.skip_enabled !== false;
-      });
-      // also sync yt from page_settings if exists
-      db.ref('page_settings/apk').once('value').then(snap => {
-        if (snap.exists() && snap.val().yt_link && !videoInput.value) {
-          videoInput.value = snap.val().yt_link;
-        }
-      });
-    }
-    loadSettings();
-
-    document.getElementById('settingsForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      btnSaveSettings.disabled = true;
-      btnSaveSettings.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Saving...";
-
-      const payload = {
-        video_url: videoInput.value.trim(),
-        video_enabled: videoToggle.checked,
-        how_to_skip: skipInput.value.trim(),
-        skip_enabled: skipToggle.checked,
-        updated_at: Date.now()
-      };
-
-      Promise.all([
-        db.ref('ff_apk_page').update(payload),
-        db.ref('page_settings/apk').set({
-          yt_link: payload.video_enabled ? payload.video_url : '',
-          rar_password: '',
-          how_to_skip: payload.skip_enabled ? payload.how_to_skip : '',
-          skip_enabled: payload.skip_enabled
-        })
-      ])
-      .then(() => alert('✅ Page Settings Saved!'))
-      .catch(err => alert('❌ Error: ' + err.message))
-      .finally(() => {
-        btnSaveSettings.disabled = false;
-        btnSaveSettings.innerHTML = "<i class='bx bx-save'></i> Save Page Settings";
-      });
-    });
-
-    // ========== APK ITEMS CRUD ==========
-    const apkList = document.getElementById('apkList');
-    const addForm = document.getElementById('addForm');
-    const btnAdd = document.getElementById('btnAdd');
-
-    // Realtime list
-    db.ref('apks').on('value', (snap) => {
-      apkList.innerHTML = '';
-      if (!snap.exists()) {
-        apkList.innerHTML = '<div class="empty-state"><i class="bx bx-package"></i><br>No APK added yet. Add one above.</div>';
-        return;
-      }
-
-      const items = [];
-      snap.forEach(child => {
-        items.push({ id: child.key, ...child.val() });
-      });
-      // newest first
-      items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-      items.forEach(item => {
-        const row = document.createElement('div');
-        row.className = 'item-row';
-        row.innerHTML = `
-          <div class="item-info">
-            <div class="item-title">${item.title || 'Untitled'}</div>
-            <div class="item-link">${item.download || ''}</div>
-          </div>
-          <div class="item-actions">
-            <button class="btn-sm btn-edit" onclick="openEdit('${item.id}', \`${(item.title||'').replace(/`/g,'')}\`, \`${(item.download||'').replace(/`/g,'')}\`)">
-              <i class='bx bx-edit'></i> Edit
-            </button>
-            <button class="btn-sm btn-del" onclick="deleteApk('${item.id}')">
-              <i class='bx bx-trash'></i>
-            </button>
-          </div>
-        `;
-        apkList.appendChild(row);
-      });
-    });
-
-    // Add new
-    addForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const title = document.getElementById('newTitle').value.trim();
-      const link = document.getElementById('newLink').value.trim();
-      if (!title || !link) return alert('Title and Download Link required!');
-
-      btnAdd.disabled = true;
-      btnAdd.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Adding...";
-
-      const newRef = db.ref('apks').push();
-      newRef.set({
-        title: title,
-        download: link,
-        timestamp: Date.now()
-      })
-      .then(() => {
-        document.getElementById('newTitle').value = '';
-        document.getElementById('newLink').value = '';
-        alert('✅ APK Added Successfully!');
-      })
-      .catch(err => alert('❌ Error: ' + err.message))
-      .finally(() => {
-        btnAdd.disabled = false;
-        btnAdd.innerHTML = "<i class='bx bx-plus'></i> Add APK";
-      });
-    });
-
-    // Edit Modal
-    window.openEdit = function(id, title, link) {
-      document.getElementById('editId').value = id;
-      document.getElementById('editTitle').value = title;
-      document.getElementById('editLink').value = link;
-      document.getElementById('editModal').style.display = 'flex';
-    };
-
-    window.closeEditModal = function() {
-      document.getElementById('editModal').style.display = 'none';
-    };
-
-    document.getElementById('btnUpdate').addEventListener('click', function() {
-      const id = document.getElementById('editId').value;
-      const title = document.getElementById('editTitle').value.trim();
-      const link = document.getElementById('editLink').value.trim();
-      if (!title || !link) return alert('Fill all fields!');
-
-      db.ref('apks/' + id).update({
-        title: title,
-        download: link
-      })
-      .then(() => {
-        closeEditModal();
-        alert('✅ Updated!');
-      })
-      .catch(err => alert('❌ Error: ' + err.message));
-    });
-
-    // Delete
-    window.deleteApk = function(id) {
-      if (!confirm('Delete this APK permanently?')) return;
-      db.ref('apks/' + id).remove()
-        .then(() => alert('🗑️ Deleted!'))
-        .catch(err => alert('❌ Error: ' + err.message));
-    };
-
-    // Close modal on outside click
-    document.getElementById('editModal').addEventListener('click', function(e) {
-      if (e.target === this) closeEditModal();
-    });
-
-    // One-time migration: if old single APK exists in ff_apk_page but apks/ empty
-    db.ref('apks').once('value').then(snap => {
-      if (!snap.exists()) {
-        db.ref('ff_apk_page').once('value').then(s => {
-          const d = s.val();
-          if (d && d.apk_name && d.download_link) {
-            db.ref('apks').push({
-              title: d.apk_name,
-              download: d.download_link,
-              timestamp: Date.now()
-            });
-          }
+        onValue(ref(db, "settings/free_fire_apk"), snapshot => {
+            const data = snapshot.val() || {};
+            document.getElementById('videoUrl').value = data.video_url || '';
+            document.getElementById('skipUrl').value = data.how_to_skip || '';
+            document.getElementById('rarPassword').value = data.rar_password || '';
         });
-      }
-    });
-  </script>
+
+        window.saveSettings = function() {
+            set(ref(db, "settings/free_fire_apk"), {
+                video_url: document.getElementById('videoUrl').value.trim(),
+                how_to_skip: document.getElementById('skipUrl').value.trim(),
+                rar_password: document.getElementById('rarPassword').value.trim()
+            }).then(() => alert("Settings saved!"));
+        };
+
+        window.addItem = function() {
+            const title = document.getElementById('itemTitle').value.trim();
+            const download = document.getElementById('itemDownload').value.trim();
+            if (!title || !download) return alert("Fill in all fields!");
+            
+            set(push(ref(db, "free_fire_apk")), { title, download }).then(() => {
+                alert("Item added!");
+                document.getElementById('itemTitle').value = '';
+                document.getElementById('itemDownload').value = '';
+            });
+        };
+
+        onValue(ref(db, "free_fire_apk"), snapshot => {
+            const list = document.getElementById('itemsList');
+            list.innerHTML = '';
+            if (!snapshot.exists()) {
+                list.innerHTML = '<p style="color: #aaa; font-size: 13px;">No items added yet.</p>';
+                return;
+            }
+            snapshot.forEach(child => {
+                list.innerHTML += `
+                    <div class="item-card">
+                        <div style="font-weight: bold; font-size: 14px;">${child.val().title}</div>
+                        <button class="btn-delete" onclick="remove(ref(db, 'free_fire_apk/${child.key}'))"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        });
+    </script>
 </body>
 </html>
